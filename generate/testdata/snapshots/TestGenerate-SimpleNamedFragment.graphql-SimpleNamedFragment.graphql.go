@@ -10,29 +10,11 @@ import (
 	"github.com/Khan/genqlient/internal/testutil"
 )
 
-// SimpleNamedFragmentRandomItemArticle includes the requested fields of the GraphQL type Article.
-type SimpleNamedFragmentRandomItemArticle struct {
-	Typename string `json:"__typename"`
-	// ID is the identifier of the content.
-	Id   testutil.ID `json:"id"`
-	Name string      `json:"name"`
-}
-
-// GetTypename returns SimpleNamedFragmentRandomItemArticle.Typename, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemArticle) GetTypename() string { return v.Typename }
-
-// GetId returns SimpleNamedFragmentRandomItemArticle.Id, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemArticle) GetId() testutil.ID { return v.Id }
-
-// GetName returns SimpleNamedFragmentRandomItemArticle.Name, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemArticle) GetName() string { return v.Name }
-
 // SimpleNamedFragmentRandomItemContent includes the requested fields of the GraphQL interface Content.
 //
 // SimpleNamedFragmentRandomItemContent is implemented by the following types:
-// SimpleNamedFragmentRandomItemArticle
-// SimpleNamedFragmentRandomItemTopic
 // SimpleNamedFragmentRandomItemVideo
+// SimpleNamedFragmentRandomItemOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -49,11 +31,9 @@ type SimpleNamedFragmentRandomItemContent interface {
 	GetName() string
 }
 
-func (v *SimpleNamedFragmentRandomItemArticle) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
-}
-func (v *SimpleNamedFragmentRandomItemTopic) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
-}
 func (v *SimpleNamedFragmentRandomItemVideo) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
+}
+func (v *SimpleNamedFragmentRandomItemOther) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
 }
 
 func __unmarshalSimpleNamedFragmentRandomItemContent(b []byte, v *SimpleNamedFragmentRandomItemContent) error {
@@ -70,12 +50,6 @@ func __unmarshalSimpleNamedFragmentRandomItemContent(b []byte, v *SimpleNamedFra
 	}
 
 	switch tn.TypeName {
-	case "Article":
-		*v = new(SimpleNamedFragmentRandomItemArticle)
-		return json.Unmarshal(b, *v)
-	case "Topic":
-		*v = new(SimpleNamedFragmentRandomItemTopic)
-		return json.Unmarshal(b, *v)
 	case "Video":
 		*v = new(SimpleNamedFragmentRandomItemVideo)
 		return json.Unmarshal(b, *v)
@@ -83,8 +57,8 @@ func __unmarshalSimpleNamedFragmentRandomItemContent(b []byte, v *SimpleNamedFra
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		return fmt.Errorf(
-			`unexpected concrete type for SimpleNamedFragmentRandomItemContent: "%v"`, tn.TypeName)
+		*v = new(SimpleNamedFragmentRandomItemOther)
+		return json.Unmarshal(b, *v)
 	}
 }
 
@@ -92,22 +66,6 @@ func __marshalSimpleNamedFragmentRandomItemContent(v *SimpleNamedFragmentRandomI
 
 	var typename string
 	switch v := (*v).(type) {
-	case *SimpleNamedFragmentRandomItemArticle:
-		typename = "Article"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*SimpleNamedFragmentRandomItemArticle
-		}{typename, v}
-		return json.Marshal(result)
-	case *SimpleNamedFragmentRandomItemTopic:
-		typename = "Topic"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*SimpleNamedFragmentRandomItemTopic
-		}{typename, v}
-		return json.Marshal(result)
 	case *SimpleNamedFragmentRandomItemVideo:
 		typename = "Video"
 
@@ -120,6 +78,9 @@ func __marshalSimpleNamedFragmentRandomItemContent(v *SimpleNamedFragmentRandomI
 			*__premarshalSimpleNamedFragmentRandomItemVideo
 		}{typename, premarshaled}
 		return json.Marshal(result)
+	case *SimpleNamedFragmentRandomItemOther:
+
+		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -128,22 +89,22 @@ func __marshalSimpleNamedFragmentRandomItemContent(v *SimpleNamedFragmentRandomI
 	}
 }
 
-// SimpleNamedFragmentRandomItemTopic includes the requested fields of the GraphQL type Topic.
-type SimpleNamedFragmentRandomItemTopic struct {
+// SimpleNamedFragmentRandomItemOther includes the requested fields of the GraphQL type Content.
+type SimpleNamedFragmentRandomItemOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id   testutil.ID `json:"id"`
 	Name string      `json:"name"`
 }
 
-// GetTypename returns SimpleNamedFragmentRandomItemTopic.Typename, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemTopic) GetTypename() string { return v.Typename }
+// GetTypename returns SimpleNamedFragmentRandomItemOther.Typename, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomItemOther) GetTypename() string { return v.Typename }
 
-// GetId returns SimpleNamedFragmentRandomItemTopic.Id, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemTopic) GetId() testutil.ID { return v.Id }
+// GetId returns SimpleNamedFragmentRandomItemOther.Id, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomItemOther) GetId() testutil.ID { return v.Id }
 
-// GetName returns SimpleNamedFragmentRandomItemTopic.Name, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemTopic) GetName() string { return v.Name }
+// GetName returns SimpleNamedFragmentRandomItemOther.Name, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomItemOther) GetName() string { return v.Name }
 
 // SimpleNamedFragmentRandomItemVideo includes the requested fields of the GraphQL type Video.
 type SimpleNamedFragmentRandomItemVideo struct {
@@ -233,19 +194,11 @@ func (v *SimpleNamedFragmentRandomItemVideo) __premarshalJSON() (*__premarshalSi
 	return &retval, nil
 }
 
-// SimpleNamedFragmentRandomLeafArticle includes the requested fields of the GraphQL type Article.
-type SimpleNamedFragmentRandomLeafArticle struct {
-	Typename string `json:"__typename"`
-}
-
-// GetTypename returns SimpleNamedFragmentRandomLeafArticle.Typename, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomLeafArticle) GetTypename() string { return v.Typename }
-
 // SimpleNamedFragmentRandomLeafLeafContent includes the requested fields of the GraphQL interface LeafContent.
 //
 // SimpleNamedFragmentRandomLeafLeafContent is implemented by the following types:
-// SimpleNamedFragmentRandomLeafArticle
 // SimpleNamedFragmentRandomLeafVideo
+// SimpleNamedFragmentRandomLeafOther
 // The GraphQL type's documentation follows.
 //
 // LeafContent represents content items that can't have child-nodes.
@@ -255,9 +208,9 @@ type SimpleNamedFragmentRandomLeafLeafContent interface {
 	GetTypename() string
 }
 
-func (v *SimpleNamedFragmentRandomLeafArticle) implementsGraphQLInterfaceSimpleNamedFragmentRandomLeafLeafContent() {
-}
 func (v *SimpleNamedFragmentRandomLeafVideo) implementsGraphQLInterfaceSimpleNamedFragmentRandomLeafLeafContent() {
+}
+func (v *SimpleNamedFragmentRandomLeafOther) implementsGraphQLInterfaceSimpleNamedFragmentRandomLeafLeafContent() {
 }
 
 func __unmarshalSimpleNamedFragmentRandomLeafLeafContent(b []byte, v *SimpleNamedFragmentRandomLeafLeafContent) error {
@@ -274,9 +227,6 @@ func __unmarshalSimpleNamedFragmentRandomLeafLeafContent(b []byte, v *SimpleName
 	}
 
 	switch tn.TypeName {
-	case "Article":
-		*v = new(SimpleNamedFragmentRandomLeafArticle)
-		return json.Unmarshal(b, *v)
 	case "Video":
 		*v = new(SimpleNamedFragmentRandomLeafVideo)
 		return json.Unmarshal(b, *v)
@@ -284,8 +234,8 @@ func __unmarshalSimpleNamedFragmentRandomLeafLeafContent(b []byte, v *SimpleName
 		return fmt.Errorf(
 			"response was missing LeafContent.__typename")
 	default:
-		return fmt.Errorf(
-			`unexpected concrete type for SimpleNamedFragmentRandomLeafLeafContent: "%v"`, tn.TypeName)
+		*v = new(SimpleNamedFragmentRandomLeafOther)
+		return json.Unmarshal(b, *v)
 	}
 }
 
@@ -293,14 +243,6 @@ func __marshalSimpleNamedFragmentRandomLeafLeafContent(v *SimpleNamedFragmentRan
 
 	var typename string
 	switch v := (*v).(type) {
-	case *SimpleNamedFragmentRandomLeafArticle:
-		typename = "Article"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*SimpleNamedFragmentRandomLeafArticle
-		}{typename, v}
-		return json.Marshal(result)
 	case *SimpleNamedFragmentRandomLeafVideo:
 		typename = "Video"
 
@@ -313,6 +255,9 @@ func __marshalSimpleNamedFragmentRandomLeafLeafContent(v *SimpleNamedFragmentRan
 			*__premarshalSimpleNamedFragmentRandomLeafVideo
 		}{typename, premarshaled}
 		return json.Marshal(result)
+	case *SimpleNamedFragmentRandomLeafOther:
+
+		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -320,6 +265,14 @@ func __marshalSimpleNamedFragmentRandomLeafLeafContent(v *SimpleNamedFragmentRan
 			`unexpected concrete type for SimpleNamedFragmentRandomLeafLeafContent: "%T"`, v)
 	}
 }
+
+// SimpleNamedFragmentRandomLeafOther includes the requested fields of the GraphQL type LeafContent.
+type SimpleNamedFragmentRandomLeafOther struct {
+	Typename string `json:"__typename"`
+}
+
+// GetTypename returns SimpleNamedFragmentRandomLeafOther.Typename, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomLeafOther) GetTypename() string { return v.Typename }
 
 // SimpleNamedFragmentRandomLeafVideo includes the requested fields of the GraphQL type Video.
 type SimpleNamedFragmentRandomLeafVideo struct {
@@ -590,4 +543,3 @@ func SimpleNamedFragment(
 
 	return data_, err_
 }
-

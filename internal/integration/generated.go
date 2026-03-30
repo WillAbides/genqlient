@@ -106,23 +106,11 @@ type AnimalFieldsHairBeingsHair struct {
 // GetHasHair returns AnimalFieldsHairBeingsHair.HasHair, and is useful for accessing the field via an interface.
 func (v *AnimalFieldsHairBeingsHair) GetHasHair() bool { return v.HasHair }
 
-// AnimalFieldsOwnerAnimal includes the requested fields of the GraphQL type Animal.
-type AnimalFieldsOwnerAnimal struct {
-	Typename string `json:"__typename"`
-	Id       string `json:"id"`
-}
-
-// GetTypename returns AnimalFieldsOwnerAnimal.Typename, and is useful for accessing the field via an interface.
-func (v *AnimalFieldsOwnerAnimal) GetTypename() string { return v.Typename }
-
-// GetId returns AnimalFieldsOwnerAnimal.Id, and is useful for accessing the field via an interface.
-func (v *AnimalFieldsOwnerAnimal) GetId() string { return v.Id }
-
 // AnimalFieldsOwnerBeing includes the requested fields of the GraphQL interface Being.
 //
 // AnimalFieldsOwnerBeing is implemented by the following types:
-// AnimalFieldsOwnerAnimal
 // AnimalFieldsOwnerUser
+// AnimalFieldsOwnerOther
 type AnimalFieldsOwnerBeing interface {
 	implementsGraphQLInterfaceAnimalFieldsOwnerBeing()
 	// GetTypename returns the receiver's concrete GraphQL type-name (see interface doc for possible values).
@@ -131,8 +119,8 @@ type AnimalFieldsOwnerBeing interface {
 	GetId() string
 }
 
-func (v *AnimalFieldsOwnerAnimal) implementsGraphQLInterfaceAnimalFieldsOwnerBeing() {}
-func (v *AnimalFieldsOwnerUser) implementsGraphQLInterfaceAnimalFieldsOwnerBeing()   {}
+func (v *AnimalFieldsOwnerUser) implementsGraphQLInterfaceAnimalFieldsOwnerBeing()  {}
+func (v *AnimalFieldsOwnerOther) implementsGraphQLInterfaceAnimalFieldsOwnerBeing() {}
 
 func __unmarshalAnimalFieldsOwnerBeing(b []byte, v *AnimalFieldsOwnerBeing) error {
 	if string(b) == "null" {
@@ -148,9 +136,6 @@ func __unmarshalAnimalFieldsOwnerBeing(b []byte, v *AnimalFieldsOwnerBeing) erro
 	}
 
 	switch tn.TypeName {
-	case "Animal":
-		*v = new(AnimalFieldsOwnerAnimal)
-		return json.Unmarshal(b, *v)
 	case "User":
 		*v = new(AnimalFieldsOwnerUser)
 		return json.Unmarshal(b, *v)
@@ -158,8 +143,8 @@ func __unmarshalAnimalFieldsOwnerBeing(b []byte, v *AnimalFieldsOwnerBeing) erro
 		return fmt.Errorf(
 			"response was missing Being.__typename")
 	default:
-		return fmt.Errorf(
-			`unexpected concrete type for AnimalFieldsOwnerBeing: "%v"`, tn.TypeName)
+		*v = new(AnimalFieldsOwnerOther)
+		return json.Unmarshal(b, *v)
 	}
 }
 
@@ -167,14 +152,6 @@ func __marshalAnimalFieldsOwnerBeing(v *AnimalFieldsOwnerBeing) ([]byte, error) 
 
 	var typename string
 	switch v := (*v).(type) {
-	case *AnimalFieldsOwnerAnimal:
-		typename = "Animal"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*AnimalFieldsOwnerAnimal
-		}{typename, v}
-		return json.Marshal(result)
 	case *AnimalFieldsOwnerUser:
 		typename = "User"
 
@@ -187,6 +164,9 @@ func __marshalAnimalFieldsOwnerBeing(v *AnimalFieldsOwnerBeing) ([]byte, error) 
 			*__premarshalAnimalFieldsOwnerUser
 		}{typename, premarshaled}
 		return json.Marshal(result)
+	case *AnimalFieldsOwnerOther:
+
+		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -194,6 +174,18 @@ func __marshalAnimalFieldsOwnerBeing(v *AnimalFieldsOwnerBeing) ([]byte, error) 
 			`unexpected concrete type for AnimalFieldsOwnerBeing: "%T"`, v)
 	}
 }
+
+// AnimalFieldsOwnerOther includes the requested fields of the GraphQL type Being.
+type AnimalFieldsOwnerOther struct {
+	Typename string `json:"__typename"`
+	Id       string `json:"id"`
+}
+
+// GetTypename returns AnimalFieldsOwnerOther.Typename, and is useful for accessing the field via an interface.
+func (v *AnimalFieldsOwnerOther) GetTypename() string { return v.Typename }
+
+// GetId returns AnimalFieldsOwnerOther.Id, and is useful for accessing the field via an interface.
+func (v *AnimalFieldsOwnerOther) GetId() string { return v.Id }
 
 // AnimalFieldsOwnerUser includes the requested fields of the GraphQL type User.
 type AnimalFieldsOwnerUser struct {
@@ -288,8 +280,8 @@ func (v *FriendsFields) GetName() string { return v.Name }
 // InnerBeingFields includes the GraphQL fields of Being requested by the fragment InnerBeingFields.
 //
 // InnerBeingFields is implemented by the following types:
-// InnerBeingFieldsAnimal
 // InnerBeingFieldsUser
+// InnerBeingFieldsOther
 type InnerBeingFields interface {
 	implementsGraphQLInterfaceInnerBeingFields()
 	// GetId returns the interface-field "id" from its implementation.
@@ -298,8 +290,8 @@ type InnerBeingFields interface {
 	GetName() string
 }
 
-func (v *InnerBeingFieldsAnimal) implementsGraphQLInterfaceInnerBeingFields() {}
-func (v *InnerBeingFieldsUser) implementsGraphQLInterfaceInnerBeingFields()   {}
+func (v *InnerBeingFieldsUser) implementsGraphQLInterfaceInnerBeingFields()  {}
+func (v *InnerBeingFieldsOther) implementsGraphQLInterfaceInnerBeingFields() {}
 
 func __unmarshalInnerBeingFields(b []byte, v *InnerBeingFields) error {
 	if string(b) == "null" {
@@ -315,9 +307,6 @@ func __unmarshalInnerBeingFields(b []byte, v *InnerBeingFields) error {
 	}
 
 	switch tn.TypeName {
-	case "Animal":
-		*v = new(InnerBeingFieldsAnimal)
-		return json.Unmarshal(b, *v)
 	case "User":
 		*v = new(InnerBeingFieldsUser)
 		return json.Unmarshal(b, *v)
@@ -325,8 +314,8 @@ func __unmarshalInnerBeingFields(b []byte, v *InnerBeingFields) error {
 		return fmt.Errorf(
 			"response was missing Being.__typename")
 	default:
-		return fmt.Errorf(
-			`unexpected concrete type for InnerBeingFields: "%v"`, tn.TypeName)
+		*v = new(InnerBeingFieldsOther)
+		return json.Unmarshal(b, *v)
 	}
 }
 
@@ -334,14 +323,6 @@ func __marshalInnerBeingFields(v *InnerBeingFields) ([]byte, error) {
 
 	var typename string
 	switch v := (*v).(type) {
-	case *InnerBeingFieldsAnimal:
-		typename = "Animal"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*InnerBeingFieldsAnimal
-		}{typename, v}
-		return json.Marshal(result)
 	case *InnerBeingFieldsUser:
 		typename = "User"
 
@@ -350,6 +331,9 @@ func __marshalInnerBeingFields(v *InnerBeingFields) ([]byte, error) {
 			*InnerBeingFieldsUser
 		}{typename, v}
 		return json.Marshal(result)
+	case *InnerBeingFieldsOther:
+
+		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -358,17 +342,17 @@ func __marshalInnerBeingFields(v *InnerBeingFields) ([]byte, error) {
 	}
 }
 
-// InnerBeingFields includes the GraphQL fields of Animal requested by the fragment InnerBeingFields.
-type InnerBeingFieldsAnimal struct {
+// InnerBeingFieldsOther includes the requested fields of the GraphQL type Being.
+type InnerBeingFieldsOther struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// GetId returns InnerBeingFieldsAnimal.Id, and is useful for accessing the field via an interface.
-func (v *InnerBeingFieldsAnimal) GetId() string { return v.Id }
+// GetId returns InnerBeingFieldsOther.Id, and is useful for accessing the field via an interface.
+func (v *InnerBeingFieldsOther) GetId() string { return v.Id }
 
-// GetName returns InnerBeingFieldsAnimal.Name, and is useful for accessing the field via an interface.
-func (v *InnerBeingFieldsAnimal) GetName() string { return v.Name }
+// GetName returns InnerBeingFieldsOther.Name, and is useful for accessing the field via an interface.
+func (v *InnerBeingFieldsOther) GetName() string { return v.Name }
 
 // InnerBeingFields includes the GraphQL fields of User requested by the fragment InnerBeingFields.
 type InnerBeingFieldsUser struct {

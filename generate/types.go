@@ -486,7 +486,12 @@ type goInterfaceType struct {
 	// we'll generate getter methods for each.
 	SharedFields    []*goStructField
 	Implementations []*goStructType
-	Selection       ast.SelectionSet
+	// OtherImplementation is a catch-all struct for concrete types not
+	// explicitly referenced by any fragment in the query.  It contains
+	// only the shared fields.  If nil, all implementations are explicitly
+	// listed in Implementations.
+	OtherImplementation *goStructType
+	Selection           ast.SelectionSet
 	descriptionInfo
 }
 
@@ -529,6 +534,10 @@ func (typ *goInterfaceType) WriteDefinition(w io.Writer, g *generator) error {
 	for _, impl := range typ.Implementations {
 		fmt.Fprintf(w, "func (v *%s) %s() {}\n",
 			impl.Reference(), implementsMethodName)
+	}
+	if typ.OtherImplementation != nil {
+		fmt.Fprintf(w, "func (v *%s) %s() {}\n",
+			typ.OtherImplementation.Reference(), implementsMethodName)
 	}
 
 	// Finally, write the marshal- and unmarshal-helpers, which

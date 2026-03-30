@@ -35,6 +35,12 @@ func __marshal{{.GoName}}(v *{{.GoName}}) ([]byte, error) {
         {{end -}}
         return json.Marshal(result)
     {{end -}}
+    {{if .OtherImplementation -}}
+    case *{{.OtherImplementation.GoName}}:
+        {{/* For the catch-all "other" type, marshal directly; the struct
+             already has __typename populated from unmarshaling. */}}
+        return {{ref "encoding/json.Marshal"}}(v)
+    {{end -}}
     case nil:
         return []byte("null"), nil
     default:

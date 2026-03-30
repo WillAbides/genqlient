@@ -522,15 +522,24 @@ func (g *generator) convertDefinition(
 		implementationTypes := g.schema.GetPossibleTypes(def)
 		// Make sure we generate stable output by sorting the types by name when we get them
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
+
+		// Determine which concrete types are explicitly referenced by
+		// fragments in the selection set.  If any are, we only generate
+		// full implementation structs for those types, and a single
+		// catch-all "other" struct for everything else.
+		referencedTypes := g.collectReferencedTypes(selectionSet)
+
 		goType := &goInterfaceType{
 			GoName:          name,
 			SharedFields:    sharedFields,
-			Implementations: make([]*goStructType, len(implementationTypes)),
 			Selection:       selectionSet,
 			descriptionInfo: desc,
 		}
 
-		for i, implDef := range implementationTypes {
+		for _, implDef := range implementationTypes {
+			if len(referencedTypes) > 0 && !referencedTypes[implDef.Name] {
+				continue
+			}
 			// TODO(benkraft): In principle we should skip generating a Go
 			// field for __typename each of these impl-defs if you didn't
 			// request it (and it was automatically added by
@@ -548,8 +557,24 @@ func (g *generator) convertDefinition(
 					pos, "interface %s had non-object implementation %s",
 					def.Name, implDef.Name)
 			}
-			goType.Implementations[i] = implStructTyp
+			goType.Implementations = append(goType.Implementations, implStructTyp)
 		}
+
+		if len(referencedTypes) > 0 && len(goType.Implementations) < len(implementationTypes) {
+			otherName := makeTypeName(namePrefix, "other", g.Config.GetDefaultCasingAlgorithm())
+			otherType := &goStructType{
+				GoName:    otherName,
+				Fields:    sharedFields,
+				Selection: selectionSet,
+				descriptionInfo: descriptionInfo{
+					GraphQLName: def.Name,
+				},
+				Generator: g,
+			}
+			goType.OtherImplementation = otherType
+			g.typeMap[otherName] = otherType
+		}
+
 		return g.addType(goType, goType.GoName, pos)
 
 	case ast.Enum:
@@ -711,6 +736,30 @@ func (g *generator) convertSelectionSet(
 		fieldNames[field.JSONName] = true
 	}
 	return uniqFields, nil
+}
+
+// collectReferencedTypes returns the set of concrete type names that are
+// explicitly referenced by inline fragments or named fragment spreads in the
+// given selection set.  This is used to determine which implementation types
+// need full structs generated, vs. which can share a single catch-all "other"
+// struct.
+func (g *generator) collectReferencedTypes(selectionSet ast.SelectionSet) map[string]bool {
+	referenced := make(map[string]bool)
+	for _, selection := range selectionSet {
+		switch sel := selection.(type) {
+		case *ast.InlineFragment:
+			fragmentTypeDef := g.schema.Types[sel.TypeCondition]
+			for _, t := range g.schema.GetPossibleTypes(fragmentTypeDef) {
+				referenced[t.Name] = true
+			}
+		case *ast.FragmentSpread:
+			fragmentTypeDef := sel.Definition.Definition
+			for _, t := range g.schema.GetPossibleTypes(fragmentTypeDef) {
+				referenced[t.Name] = true
+			}
+		}
+	}
+	return referenced
 }
 
 // fragmentMatches returns true if the given fragment is "active" when applied
@@ -886,16 +935,22 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 		implementationTypes := g.schema.GetPossibleTypes(typ)
 		// Make sure we generate stable output by sorting the types by name when we get them
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
+
+		referencedTypes := g.collectReferencedTypes(fragment.SelectionSet)
+
 		goType := &goInterfaceType{
 			GoName:          fragment.Name,
 			SharedFields:    fields,
-			Implementations: make([]*goStructType, len(implementationTypes)),
 			Selection:       fragment.SelectionSet,
 			descriptionInfo: desc,
 		}
 		g.typeMap[fragment.Name] = goType
 
-		for i, implDef := range implementationTypes {
+		for _, implDef := range implementationTypes {
+			if len(referencedTypes) > 0 && !referencedTypes[implDef.Name] {
+				continue
+			}
+
 			implFields, err := g.convertSelectionSet(
 				newPrefixList(fragment.Name), fragment.SelectionSet, implDef, directive)
 			if err != nil {
@@ -912,8 +967,23 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 				descriptionInfo: implDesc,
 				Generator:       g,
 			}
-			goType.Implementations[i] = implTyp
+			goType.Implementations = append(goType.Implementations, implTyp)
 			g.typeMap[implTyp.GoName] = implTyp
+		}
+
+		if len(referencedTypes) > 0 && len(goType.Implementations) < len(implementationTypes) {
+			otherName := fragment.Name + "Other"
+			otherType := &goStructType{
+				GoName:    otherName,
+				Fields:    fields,
+				Selection: fragment.SelectionSet,
+				descriptionInfo: descriptionInfo{
+					GraphQLName: typ.Name,
+				},
+				Generator: g,
+			}
+			goType.OtherImplementation = otherType
+			g.typeMap[otherName] = otherType
 		}
 
 		return goType, nil
