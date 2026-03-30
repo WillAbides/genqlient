@@ -1501,11 +1501,20 @@ func (v *MoreVideoFieldsParentTopic) __premarshalJSON() (*__premarshalMoreVideoF
 	return &retval, nil
 }
 
+// MoreVideoFieldsParentTopicChildrenArticle includes the requested fields of the GraphQL type Article.
+type MoreVideoFieldsParentTopicChildrenArticle struct {
+	Typename *string `json:"__typename"`
+}
+
+// GetTypename returns MoreVideoFieldsParentTopicChildrenArticle.Typename, and is useful for accessing the field via an interface.
+func (v *MoreVideoFieldsParentTopicChildrenArticle) GetTypename() *string { return v.Typename }
+
 // MoreVideoFieldsParentTopicChildrenContent includes the requested fields of the GraphQL interface Content.
 //
 // MoreVideoFieldsParentTopicChildrenContent is implemented by the following types:
+// MoreVideoFieldsParentTopicChildrenArticle
+// MoreVideoFieldsParentTopicChildrenTopic
 // MoreVideoFieldsParentTopicChildrenVideo
-// MoreVideoFieldsParentTopicChildrenOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -1515,9 +1524,11 @@ type MoreVideoFieldsParentTopicChildrenContent interface {
 	GetTypename() *string
 }
 
-func (v *MoreVideoFieldsParentTopicChildrenVideo) implementsGraphQLInterfaceMoreVideoFieldsParentTopicChildrenContent() {
+func (v *MoreVideoFieldsParentTopicChildrenArticle) implementsGraphQLInterfaceMoreVideoFieldsParentTopicChildrenContent() {
 }
-func (v *MoreVideoFieldsParentTopicChildrenOther) implementsGraphQLInterfaceMoreVideoFieldsParentTopicChildrenContent() {
+func (v *MoreVideoFieldsParentTopicChildrenTopic) implementsGraphQLInterfaceMoreVideoFieldsParentTopicChildrenContent() {
+}
+func (v *MoreVideoFieldsParentTopicChildrenVideo) implementsGraphQLInterfaceMoreVideoFieldsParentTopicChildrenContent() {
 }
 
 func __unmarshalMoreVideoFieldsParentTopicChildrenContent(b []byte, v *MoreVideoFieldsParentTopicChildrenContent) error {
@@ -1534,6 +1545,12 @@ func __unmarshalMoreVideoFieldsParentTopicChildrenContent(b []byte, v *MoreVideo
 	}
 
 	switch tn.TypeName {
+	case "Article":
+		*v = new(MoreVideoFieldsParentTopicChildrenArticle)
+		return json.Unmarshal(b, *v)
+	case "Topic":
+		*v = new(MoreVideoFieldsParentTopicChildrenTopic)
+		return json.Unmarshal(b, *v)
 	case "Video":
 		*v = new(MoreVideoFieldsParentTopicChildrenVideo)
 		return json.Unmarshal(b, *v)
@@ -1541,8 +1558,8 @@ func __unmarshalMoreVideoFieldsParentTopicChildrenContent(b []byte, v *MoreVideo
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(MoreVideoFieldsParentTopicChildrenOther)
-		return json.Unmarshal(b, *v)
+		return fmt.Errorf(
+			`unexpected concrete type for MoreVideoFieldsParentTopicChildrenContent: "%v"`, tn.TypeName)
 	}
 }
 
@@ -1550,6 +1567,22 @@ func __marshalMoreVideoFieldsParentTopicChildrenContent(v *MoreVideoFieldsParent
 
 	var typename string
 	switch v := (*v).(type) {
+	case *MoreVideoFieldsParentTopicChildrenArticle:
+		typename = "Article"
+
+		result := struct {
+			TypeName string `json:"__typename"`
+			*MoreVideoFieldsParentTopicChildrenArticle
+		}{typename, v}
+		return json.Marshal(result)
+	case *MoreVideoFieldsParentTopicChildrenTopic:
+		typename = "Topic"
+
+		result := struct {
+			TypeName string `json:"__typename"`
+			*MoreVideoFieldsParentTopicChildrenTopic
+		}{typename, v}
+		return json.Marshal(result)
 	case *MoreVideoFieldsParentTopicChildrenVideo:
 		typename = "Video"
 
@@ -1562,9 +1595,6 @@ func __marshalMoreVideoFieldsParentTopicChildrenContent(v *MoreVideoFieldsParent
 			*__premarshalMoreVideoFieldsParentTopicChildrenVideo
 		}{typename, premarshaled}
 		return json.Marshal(result)
-	case *MoreVideoFieldsParentTopicChildrenOther:
-
-		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -1573,13 +1603,13 @@ func __marshalMoreVideoFieldsParentTopicChildrenContent(v *MoreVideoFieldsParent
 	}
 }
 
-// MoreVideoFieldsParentTopicChildrenOther includes the requested fields of the GraphQL type Content.
-type MoreVideoFieldsParentTopicChildrenOther struct {
+// MoreVideoFieldsParentTopicChildrenTopic includes the requested fields of the GraphQL type Topic.
+type MoreVideoFieldsParentTopicChildrenTopic struct {
 	Typename *string `json:"__typename"`
 }
 
-// GetTypename returns MoreVideoFieldsParentTopicChildrenOther.Typename, and is useful for accessing the field via an interface.
-func (v *MoreVideoFieldsParentTopicChildrenOther) GetTypename() *string { return v.Typename }
+// GetTypename returns MoreVideoFieldsParentTopicChildrenTopic.Typename, and is useful for accessing the field via an interface.
+func (v *MoreVideoFieldsParentTopicChildrenTopic) GetTypename() *string { return v.Typename }
 
 // MoreVideoFieldsParentTopicChildrenVideo includes the requested fields of the GraphQL type Video.
 type MoreVideoFieldsParentTopicChildrenVideo struct {
@@ -2640,3 +2670,4 @@ func ComplexNamedFragmentsWithInlineUnion(
 
 	return data_, err_
 }
+

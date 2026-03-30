@@ -104,6 +104,21 @@ use_struct_references: boolean
 # Defaults to false.
 use_extensions: boolean
 
+# If set, when a query uses fragments on an interface or union type,
+# genqlient will only generate full Go struct types for the concrete
+# types explicitly referenced in those fragments.  All other possible
+# implementation types are collapsed into a single catch-all "Other"
+# struct that contains only the shared fields.  Unknown __typename
+# values are unmarshaled into this Other type instead of returning an
+# error.
+#
+# When false (the default), genqlient generates a separate Go struct
+# for every possible implementation type, and returns an error if the
+# server sends an unrecognized __typename.
+#
+# Defaults to false.
+omit_unreferenced_implementations: false
+
 # Customize how models are generated for optional fields. This can currently
 # be set to one of the following values:
 # - value (default): optional fields are generated as values, the same as

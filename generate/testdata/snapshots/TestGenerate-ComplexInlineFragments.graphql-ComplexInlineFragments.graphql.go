@@ -44,8 +44,8 @@ func (v *ComplexInlineFragmentsConflictingStuffArticleThumbnailStuffThumbnail) G
 //
 // ComplexInlineFragmentsConflictingStuffContent is implemented by the following types:
 // ComplexInlineFragmentsConflictingStuffArticle
+// ComplexInlineFragmentsConflictingStuffTopic
 // ComplexInlineFragmentsConflictingStuffVideo
-// ComplexInlineFragmentsConflictingStuffOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -57,9 +57,9 @@ type ComplexInlineFragmentsConflictingStuffContent interface {
 
 func (v *ComplexInlineFragmentsConflictingStuffArticle) implementsGraphQLInterfaceComplexInlineFragmentsConflictingStuffContent() {
 }
-func (v *ComplexInlineFragmentsConflictingStuffVideo) implementsGraphQLInterfaceComplexInlineFragmentsConflictingStuffContent() {
+func (v *ComplexInlineFragmentsConflictingStuffTopic) implementsGraphQLInterfaceComplexInlineFragmentsConflictingStuffContent() {
 }
-func (v *ComplexInlineFragmentsConflictingStuffOther) implementsGraphQLInterfaceComplexInlineFragmentsConflictingStuffContent() {
+func (v *ComplexInlineFragmentsConflictingStuffVideo) implementsGraphQLInterfaceComplexInlineFragmentsConflictingStuffContent() {
 }
 
 func __unmarshalComplexInlineFragmentsConflictingStuffContent(b []byte, v *ComplexInlineFragmentsConflictingStuffContent) error {
@@ -79,6 +79,9 @@ func __unmarshalComplexInlineFragmentsConflictingStuffContent(b []byte, v *Compl
 	case "Article":
 		*v = new(ComplexInlineFragmentsConflictingStuffArticle)
 		return json.Unmarshal(b, *v)
+	case "Topic":
+		*v = new(ComplexInlineFragmentsConflictingStuffTopic)
+		return json.Unmarshal(b, *v)
 	case "Video":
 		*v = new(ComplexInlineFragmentsConflictingStuffVideo)
 		return json.Unmarshal(b, *v)
@@ -86,8 +89,8 @@ func __unmarshalComplexInlineFragmentsConflictingStuffContent(b []byte, v *Compl
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(ComplexInlineFragmentsConflictingStuffOther)
-		return json.Unmarshal(b, *v)
+		return fmt.Errorf(
+			`unexpected concrete type for ComplexInlineFragmentsConflictingStuffContent: "%v"`, tn.TypeName)
 	}
 }
 
@@ -103,6 +106,14 @@ func __marshalComplexInlineFragmentsConflictingStuffContent(v *ComplexInlineFrag
 			*ComplexInlineFragmentsConflictingStuffArticle
 		}{typename, v}
 		return json.Marshal(result)
+	case *ComplexInlineFragmentsConflictingStuffTopic:
+		typename = "Topic"
+
+		result := struct {
+			TypeName string `json:"__typename"`
+			*ComplexInlineFragmentsConflictingStuffTopic
+		}{typename, v}
+		return json.Marshal(result)
 	case *ComplexInlineFragmentsConflictingStuffVideo:
 		typename = "Video"
 
@@ -111,9 +122,6 @@ func __marshalComplexInlineFragmentsConflictingStuffContent(v *ComplexInlineFrag
 			*ComplexInlineFragmentsConflictingStuffVideo
 		}{typename, v}
 		return json.Marshal(result)
-	case *ComplexInlineFragmentsConflictingStuffOther:
-
-		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -122,13 +130,13 @@ func __marshalComplexInlineFragmentsConflictingStuffContent(v *ComplexInlineFrag
 	}
 }
 
-// ComplexInlineFragmentsConflictingStuffOther includes the requested fields of the GraphQL type Content.
-type ComplexInlineFragmentsConflictingStuffOther struct {
+// ComplexInlineFragmentsConflictingStuffTopic includes the requested fields of the GraphQL type Topic.
+type ComplexInlineFragmentsConflictingStuffTopic struct {
 	Typename string `json:"__typename"`
 }
 
-// GetTypename returns ComplexInlineFragmentsConflictingStuffOther.Typename, and is useful for accessing the field via an interface.
-func (v *ComplexInlineFragmentsConflictingStuffOther) GetTypename() string { return v.Typename }
+// GetTypename returns ComplexInlineFragmentsConflictingStuffTopic.Typename, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsConflictingStuffTopic) GetTypename() string { return v.Typename }
 
 // ComplexInlineFragmentsConflictingStuffVideo includes the requested fields of the GraphQL type Video.
 type ComplexInlineFragmentsConflictingStuffVideo struct {
@@ -158,11 +166,20 @@ func (v *ComplexInlineFragmentsConflictingStuffVideoThumbnail) GetTimestampSec()
 	return v.TimestampSec
 }
 
+// ComplexInlineFragmentsNestedStuffArticle includes the requested fields of the GraphQL type Article.
+type ComplexInlineFragmentsNestedStuffArticle struct {
+	Typename string `json:"__typename"`
+}
+
+// GetTypename returns ComplexInlineFragmentsNestedStuffArticle.Typename, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsNestedStuffArticle) GetTypename() string { return v.Typename }
+
 // ComplexInlineFragmentsNestedStuffContent includes the requested fields of the GraphQL interface Content.
 //
 // ComplexInlineFragmentsNestedStuffContent is implemented by the following types:
+// ComplexInlineFragmentsNestedStuffArticle
 // ComplexInlineFragmentsNestedStuffTopic
-// ComplexInlineFragmentsNestedStuffOther
+// ComplexInlineFragmentsNestedStuffVideo
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -172,9 +189,11 @@ type ComplexInlineFragmentsNestedStuffContent interface {
 	GetTypename() string
 }
 
+func (v *ComplexInlineFragmentsNestedStuffArticle) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffContent() {
+}
 func (v *ComplexInlineFragmentsNestedStuffTopic) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffContent() {
 }
-func (v *ComplexInlineFragmentsNestedStuffOther) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffContent() {
+func (v *ComplexInlineFragmentsNestedStuffVideo) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffContent() {
 }
 
 func __unmarshalComplexInlineFragmentsNestedStuffContent(b []byte, v *ComplexInlineFragmentsNestedStuffContent) error {
@@ -191,15 +210,21 @@ func __unmarshalComplexInlineFragmentsNestedStuffContent(b []byte, v *ComplexInl
 	}
 
 	switch tn.TypeName {
+	case "Article":
+		*v = new(ComplexInlineFragmentsNestedStuffArticle)
+		return json.Unmarshal(b, *v)
 	case "Topic":
 		*v = new(ComplexInlineFragmentsNestedStuffTopic)
+		return json.Unmarshal(b, *v)
+	case "Video":
+		*v = new(ComplexInlineFragmentsNestedStuffVideo)
 		return json.Unmarshal(b, *v)
 	case "":
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(ComplexInlineFragmentsNestedStuffOther)
-		return json.Unmarshal(b, *v)
+		return fmt.Errorf(
+			`unexpected concrete type for ComplexInlineFragmentsNestedStuffContent: "%v"`, tn.TypeName)
 	}
 }
 
@@ -207,6 +232,14 @@ func __marshalComplexInlineFragmentsNestedStuffContent(v *ComplexInlineFragments
 
 	var typename string
 	switch v := (*v).(type) {
+	case *ComplexInlineFragmentsNestedStuffArticle:
+		typename = "Article"
+
+		result := struct {
+			TypeName string `json:"__typename"`
+			*ComplexInlineFragmentsNestedStuffArticle
+		}{typename, v}
+		return json.Marshal(result)
 	case *ComplexInlineFragmentsNestedStuffTopic:
 		typename = "Topic"
 
@@ -219,9 +252,14 @@ func __marshalComplexInlineFragmentsNestedStuffContent(v *ComplexInlineFragments
 			*__premarshalComplexInlineFragmentsNestedStuffTopic
 		}{typename, premarshaled}
 		return json.Marshal(result)
-	case *ComplexInlineFragmentsNestedStuffOther:
+	case *ComplexInlineFragmentsNestedStuffVideo:
+		typename = "Video"
 
-		return json.Marshal(v)
+		result := struct {
+			TypeName string `json:"__typename"`
+			*ComplexInlineFragmentsNestedStuffVideo
+		}{typename, v}
+		return json.Marshal(result)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -229,14 +267,6 @@ func __marshalComplexInlineFragmentsNestedStuffContent(v *ComplexInlineFragments
 			`unexpected concrete type for ComplexInlineFragmentsNestedStuffContent: "%T"`, v)
 	}
 }
-
-// ComplexInlineFragmentsNestedStuffOther includes the requested fields of the GraphQL type Content.
-type ComplexInlineFragmentsNestedStuffOther struct {
-	Typename string `json:"__typename"`
-}
-
-// GetTypename returns ComplexInlineFragmentsNestedStuffOther.Typename, and is useful for accessing the field via an interface.
-func (v *ComplexInlineFragmentsNestedStuffOther) GetTypename() string { return v.Typename }
 
 // ComplexInlineFragmentsNestedStuffTopic includes the requested fields of the GraphQL type Topic.
 type ComplexInlineFragmentsNestedStuffTopic struct {
@@ -626,7 +656,8 @@ func (v *ComplexInlineFragmentsNestedStuffTopicChildrenArticleParentTopic) GetPa
 //
 // ComplexInlineFragmentsNestedStuffTopicChildrenContent is implemented by the following types:
 // ComplexInlineFragmentsNestedStuffTopicChildrenArticle
-// ComplexInlineFragmentsNestedStuffTopicChildrenOther
+// ComplexInlineFragmentsNestedStuffTopicChildrenTopic
+// ComplexInlineFragmentsNestedStuffTopicChildrenVideo
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -643,7 +674,9 @@ type ComplexInlineFragmentsNestedStuffTopicChildrenContent interface {
 
 func (v *ComplexInlineFragmentsNestedStuffTopicChildrenArticle) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffTopicChildrenContent() {
 }
-func (v *ComplexInlineFragmentsNestedStuffTopicChildrenOther) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffTopicChildrenContent() {
+func (v *ComplexInlineFragmentsNestedStuffTopicChildrenTopic) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffTopicChildrenContent() {
+}
+func (v *ComplexInlineFragmentsNestedStuffTopicChildrenVideo) implementsGraphQLInterfaceComplexInlineFragmentsNestedStuffTopicChildrenContent() {
 }
 
 func __unmarshalComplexInlineFragmentsNestedStuffTopicChildrenContent(b []byte, v *ComplexInlineFragmentsNestedStuffTopicChildrenContent) error {
@@ -663,12 +696,18 @@ func __unmarshalComplexInlineFragmentsNestedStuffTopicChildrenContent(b []byte, 
 	case "Article":
 		*v = new(ComplexInlineFragmentsNestedStuffTopicChildrenArticle)
 		return json.Unmarshal(b, *v)
+	case "Topic":
+		*v = new(ComplexInlineFragmentsNestedStuffTopicChildrenTopic)
+		return json.Unmarshal(b, *v)
+	case "Video":
+		*v = new(ComplexInlineFragmentsNestedStuffTopicChildrenVideo)
+		return json.Unmarshal(b, *v)
 	case "":
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(ComplexInlineFragmentsNestedStuffTopicChildrenOther)
-		return json.Unmarshal(b, *v)
+		return fmt.Errorf(
+			`unexpected concrete type for ComplexInlineFragmentsNestedStuffTopicChildrenContent: "%v"`, tn.TypeName)
 	}
 }
 
@@ -684,9 +723,22 @@ func __marshalComplexInlineFragmentsNestedStuffTopicChildrenContent(v *ComplexIn
 			*ComplexInlineFragmentsNestedStuffTopicChildrenArticle
 		}{typename, v}
 		return json.Marshal(result)
-	case *ComplexInlineFragmentsNestedStuffTopicChildrenOther:
+	case *ComplexInlineFragmentsNestedStuffTopicChildrenTopic:
+		typename = "Topic"
 
-		return json.Marshal(v)
+		result := struct {
+			TypeName string `json:"__typename"`
+			*ComplexInlineFragmentsNestedStuffTopicChildrenTopic
+		}{typename, v}
+		return json.Marshal(result)
+	case *ComplexInlineFragmentsNestedStuffTopicChildrenVideo:
+		typename = "Video"
+
+		result := struct {
+			TypeName string `json:"__typename"`
+			*ComplexInlineFragmentsNestedStuffTopicChildrenVideo
+		}{typename, v}
+		return json.Marshal(result)
 	case nil:
 		return []byte("null"), nil
 	default:
@@ -695,18 +747,39 @@ func __marshalComplexInlineFragmentsNestedStuffTopicChildrenContent(v *ComplexIn
 	}
 }
 
-// ComplexInlineFragmentsNestedStuffTopicChildrenOther includes the requested fields of the GraphQL type Content.
-type ComplexInlineFragmentsNestedStuffTopicChildrenOther struct {
+// ComplexInlineFragmentsNestedStuffTopicChildrenTopic includes the requested fields of the GraphQL type Topic.
+type ComplexInlineFragmentsNestedStuffTopicChildrenTopic struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id testutil.ID `json:"id"`
 }
 
-// GetTypename returns ComplexInlineFragmentsNestedStuffTopicChildrenOther.Typename, and is useful for accessing the field via an interface.
-func (v *ComplexInlineFragmentsNestedStuffTopicChildrenOther) GetTypename() string { return v.Typename }
+// GetTypename returns ComplexInlineFragmentsNestedStuffTopicChildrenTopic.Typename, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsNestedStuffTopicChildrenTopic) GetTypename() string { return v.Typename }
 
-// GetId returns ComplexInlineFragmentsNestedStuffTopicChildrenOther.Id, and is useful for accessing the field via an interface.
-func (v *ComplexInlineFragmentsNestedStuffTopicChildrenOther) GetId() testutil.ID { return v.Id }
+// GetId returns ComplexInlineFragmentsNestedStuffTopicChildrenTopic.Id, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsNestedStuffTopicChildrenTopic) GetId() testutil.ID { return v.Id }
+
+// ComplexInlineFragmentsNestedStuffTopicChildrenVideo includes the requested fields of the GraphQL type Video.
+type ComplexInlineFragmentsNestedStuffTopicChildrenVideo struct {
+	Typename string `json:"__typename"`
+	// ID is the identifier of the content.
+	Id testutil.ID `json:"id"`
+}
+
+// GetTypename returns ComplexInlineFragmentsNestedStuffTopicChildrenVideo.Typename, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsNestedStuffTopicChildrenVideo) GetTypename() string { return v.Typename }
+
+// GetId returns ComplexInlineFragmentsNestedStuffTopicChildrenVideo.Id, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsNestedStuffTopicChildrenVideo) GetId() testutil.ID { return v.Id }
+
+// ComplexInlineFragmentsNestedStuffVideo includes the requested fields of the GraphQL type Video.
+type ComplexInlineFragmentsNestedStuffVideo struct {
+	Typename string `json:"__typename"`
+}
+
+// GetTypename returns ComplexInlineFragmentsNestedStuffVideo.Typename, and is useful for accessing the field via an interface.
+func (v *ComplexInlineFragmentsNestedStuffVideo) GetTypename() string { return v.Typename }
 
 // ComplexInlineFragmentsRandomItemArticle includes the requested fields of the GraphQL type Article.
 type ComplexInlineFragmentsRandomItemArticle struct {
@@ -1380,3 +1453,4 @@ func ComplexInlineFragments(
 
 	return data_, err_
 }
+

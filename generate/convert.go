@@ -523,11 +523,15 @@ func (g *generator) convertDefinition(
 		// Make sure we generate stable output by sorting the types by name when we get them
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
 
-		// Determine which concrete types are explicitly referenced by
-		// fragments in the selection set.  If any are, we only generate
-		// full implementation structs for those types, and a single
-		// catch-all "other" struct for everything else.
-		referencedTypes := g.collectReferencedTypes(selectionSet)
+		// If omit_unreferenced_implementations is enabled, determine which
+		// concrete types are explicitly referenced by fragments in the
+		// selection set.  If any are, we only generate full implementation
+		// structs for those types, and a single catch-all "other" struct
+		// for everything else.
+		var referencedTypes map[string]bool
+		if g.Config.OmitUnreferencedImplementations {
+			referencedTypes = g.collectReferencedTypes(selectionSet)
+		}
 
 		goType := &goInterfaceType{
 			GoName:          name,
@@ -936,7 +940,10 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 		// Make sure we generate stable output by sorting the types by name when we get them
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
 
-		referencedTypes := g.collectReferencedTypes(fragment.SelectionSet)
+		var referencedTypes map[string]bool
+		if g.Config.OmitUnreferencedImplementations {
+			referencedTypes = g.collectReferencedTypes(fragment.SelectionSet)
+		}
 
 		goType := &goInterfaceType{
 			GoName:          fragment.Name,
