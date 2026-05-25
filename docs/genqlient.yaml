@@ -104,6 +104,15 @@ use_struct_references: boolean
 # Defaults to false.
 use_extensions: boolean
 
+# If set, genqlient will prune the schema to include only the types and
+# fields reachable from the operations defined in your query files before
+# generating code. This can significantly reduce the size of generated
+# code when working with large schemas where only a small subset of types
+# is actually queried.
+#
+# Defaults to false.
+prune_schema: boolean
+
 # Customize how models are generated for optional fields. This can currently
 # be set to one of the following values:
 # - value (default): optional fields are generated as values, the same as

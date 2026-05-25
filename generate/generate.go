@@ -332,6 +332,10 @@ func Generate(config *Config) (map[string][]byte, error) {
 		return nil, err
 	}
 
+	if config.PruneSchema {
+		schema = pruneSchema(schema, document)
+	}
+
 	// TODO(benkraft): we could also allow this, and generate an empty file
 	// with just the package-name, if it turns out to be more convenient that
 	// way.  (As-is, we generate a broken file, with just (unused) imports.)

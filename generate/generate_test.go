@@ -273,6 +273,26 @@ func TestGenerateWithConfig(t *testing.T) {
 				},
 			},
 		},
+		{
+			"PruneSchema", "", nil, &Config{
+				PruneSchema: true,
+			},
+		},
+		{
+			"PruneSchemaWithInterfaces", "", []string{
+				"ComplexInlineFragments.graphql",
+				"InterfaceNesting.graphql",
+			}, &Config{
+				PruneSchema: true,
+			},
+		},
+		{
+			"PruneSchemaInterfaceNoFragments", "", []string{
+				"InterfaceNoFragments.graphql",
+			}, &Config{
+				PruneSchema: true,
+			},
+		},
 	}
 
 	for _, test := range tests {
