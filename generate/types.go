@@ -484,10 +484,8 @@ type goInterfaceType struct {
 	GoName string
 	// Fields shared by all the interface's implementations;
 	// we'll generate getter methods for each.
-	SharedFields    []*goStructField
-	Implementations []*goStructType
-	// OtherImplementation, if non-nil, is a catch-all struct used at
-	// runtime for any concrete type not present in Implementations.
+	SharedFields        []*goStructField
+	Implementations     []*goStructType
 	OtherImplementation *goStructType
 	Selection           ast.SelectionSet
 	descriptionInfo

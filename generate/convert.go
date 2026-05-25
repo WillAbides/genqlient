@@ -528,7 +528,8 @@ func (g *generator) convertDefinition(
 		// references; the rest are absorbed by the catch-all below.
 		filteredImpls := implementationTypes
 		if g.Config.OmitUnreferencedImplementations {
-			referenced := collectReferencedConcreteTypes(selectionSet, g.schema)
+			referenced := map[string]bool{}
+			collectReferencedConcreteTypes(selectionSet, g.schema, referenced)
 			kept := make([]*ast.Definition, 0, len(implementationTypes))
 			for _, implDef := range implementationTypes {
 				if referenced[implDef.Name] {
@@ -739,37 +740,38 @@ func (g *generator) convertSelectionSet(
 	return uniqFields, nil
 }
 
-// collectReferencedConcreteTypes returns the set of concrete (Object) type
-// names reachable via inline or named fragments in sel, recursing through
-// nested fragments. Type conditions naming an interface or union do NOT
-// expand to their possible concrete types; the catch-all handles those.
-func collectReferencedConcreteTypes(sel ast.SelectionSet, schema *ast.Schema) map[string]bool {
-	referenced := map[string]bool{}
-	addCondition := func(condName string) {
-		if condName == "" {
-			return
+// collectReferencedConcreteTypes updates referenced with the concrete (Object)
+// type names reachable via inline or named fragments in selSet, recursing
+// through nested fragments. Type conditions naming an interface or union
+// don't expand to their possible concrete types; the catch-all handles those.
+func collectReferencedConcreteTypes(selSet ast.SelectionSet, schema *ast.Schema, referenced map[string]bool) {
+	for i := range selSet {
+		var condName string
+		var fragSet ast.SelectionSet
+
+		switch sel := selSet[i].(type) {
+		case *ast.InlineFragment:
+			condName = sel.TypeCondition
+			fragSet = sel.SelectionSet
+		case *ast.FragmentSpread:
+			if sel.Definition == nil {
+				continue
+			}
+			condName = sel.Definition.TypeCondition
+			fragSet = sel.Definition.SelectionSet
+		default:
+			continue
 		}
-		if condDef := schema.Types[condName]; condDef != nil && condDef.Kind == ast.Object {
+
+		condDef := schema.Types[condName]
+		if condDef == nil {
+			continue
+		}
+		if condDef.Kind == ast.Object {
 			referenced[condName] = true
 		}
+		collectReferencedConcreteTypes(fragSet, schema, referenced)
 	}
-	var walk func(sel ast.SelectionSet)
-	walk = func(sel ast.SelectionSet) {
-		for _, s := range sel {
-			switch s := s.(type) {
-			case *ast.InlineFragment:
-				addCondition(s.TypeCondition)
-				walk(s.SelectionSet)
-			case *ast.FragmentSpread:
-				if s.Definition != nil {
-					addCondition(s.Definition.TypeCondition)
-					walk(s.Definition.SelectionSet)
-				}
-			}
-		}
-	}
-	walk(sel)
-	return referenced
 }
 
 // makeCatchAllStruct builds and registers the catch-all goStructType used
@@ -789,21 +791,25 @@ func (g *generator) makeCatchAllStruct(
 ) (*goStructType, error) {
 	catchAllFields := make([]*goStructField, 0, len(sharedFields))
 	for _, f := range sharedFields {
-		if f.GoName == "" {
-			iface, ok := f.GoType.(*goInterfaceType)
-			if ok {
-				if iface.OtherImplementation == nil {
-					return nil, errorf(pos,
-						"genqlient internal error: embedded fragment %s has no catch-all",
-						iface.GoName)
-				}
-				swapped := *f
-				swapped.GoType = iface.OtherImplementation
-				catchAllFields = append(catchAllFields, &swapped)
-				continue
-			}
+		if f.GoName != "" {
+			catchAllFields = append(catchAllFields, f)
+			continue
 		}
-		catchAllFields = append(catchAllFields, f)
+		iface, ok := f.GoType.(*goInterfaceType)
+		if !ok {
+			catchAllFields = append(catchAllFields, f)
+			continue
+		}
+		if iface.OtherImplementation == nil {
+			return nil, errorf(
+				pos,
+				"genqlient internal error: embedded fragment %s has no catch-all",
+				iface.GoName,
+			)
+		}
+		swapped := *f
+		swapped.GoType = iface.OtherImplementation
+		catchAllFields = append(catchAllFields, &swapped)
 	}
 
 	catchAllName := interfaceGoName + "GenqlientOther"
@@ -1018,7 +1024,8 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 
 		filteredImpls := implementationTypes
 		if g.Config.OmitUnreferencedImplementations {
-			referenced := collectReferencedConcreteTypes(fragment.SelectionSet, g.schema)
+			referenced := map[string]bool{}
+			collectReferencedConcreteTypes(fragment.SelectionSet, g.schema, referenced)
 			kept := make([]*ast.Definition, 0, len(implementationTypes))
 			for _, implDef := range implementationTypes {
 				if referenced[implDef.Name] {
