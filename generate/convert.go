@@ -526,18 +526,16 @@ func (g *generator) convertDefinition(
 		// When omit_unreferenced_implementations is enabled, determine which
 		// concrete types are explicitly referenced by fragments in the
 		// selection set, and skip generating per-type structs for the rest.
-		// Anything we skip is handled at runtime by a single catch-all
-		// struct carrying only the interface's shared fields.
+		// Anything we skip — plus any future server-side implementation
+		// added after generation — is handled at runtime by a single
+		// catch-all struct carrying only the interface's shared fields.
 		filteredImpls := implementationTypes
-		var omittedAny bool
 		if g.Config.OmitUnreferencedImplementations {
 			referenced := collectReferencedConcreteTypes(selectionSet, g.schema)
 			kept := make([]*ast.Definition, 0, len(implementationTypes))
 			for _, implDef := range implementationTypes {
 				if referenced[implDef.Name] {
 					kept = append(kept, implDef)
-				} else {
-					omittedAny = true
 				}
 			}
 			filteredImpls = kept
@@ -571,7 +569,14 @@ func (g *generator) convertDefinition(
 			goType.Implementations = append(goType.Implementations, implStructTyp)
 		}
 
-		if omittedAny {
+		if g.Config.OmitUnreferencedImplementations {
+			// Always generate the catch-all when the option is enabled, even
+			// if every currently-known implementation is explicitly
+			// referenced. This is the contract documented in
+			// docs/genqlient.yaml: "any __typename returned by the server
+			// that doesn't match one of the explicitly-referenced types is
+			// decoded into the catch-all" — including __typenames for
+			// implementations added to the server after generation.
 			otherType, err := g.makeCatchAllStruct(name, def.Name, sharedFields, selectionSet, pos)
 			if err != nil {
 				return nil, err
@@ -1069,15 +1074,12 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
 
 		filteredImpls := implementationTypes
-		var omittedAny bool
 		if g.Config.OmitUnreferencedImplementations {
 			referenced := collectReferencedConcreteTypes(fragment.SelectionSet, g.schema)
 			kept := make([]*ast.Definition, 0, len(implementationTypes))
 			for _, implDef := range implementationTypes {
 				if referenced[implDef.Name] {
 					kept = append(kept, implDef)
-				} else {
-					omittedAny = true
 				}
 			}
 			filteredImpls = kept
@@ -1112,7 +1114,11 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 			g.typeMap[implTyp.GoName] = implTyp
 		}
 
-		if omittedAny {
+		if g.Config.OmitUnreferencedImplementations {
+			// Always generate the catch-all when the option is enabled, so
+			// __typenames for implementations added to the server after
+			// generation still decode gracefully (matching the contract in
+			// docs/genqlient.yaml).
 			otherType, err := g.makeCatchAllStruct(fragment.Name, typ.Name, fields, fragment.SelectionSet, fragment.Position)
 			if err != nil {
 				return nil, err
