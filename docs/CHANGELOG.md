@@ -29,6 +29,15 @@ Note that genqlient now requires Go 1.23 or higher, and is tested through Go 1.2
 ### New features:
 
 - Added `--version` flag to print version information including commit hash and build date
+- Added `omit_unreferenced_implementations` config option. When enabled, genqlient
+  skips generating per-type structs for interface and union implementations
+  that aren't referenced by an inline or named fragment in the selection set;
+  a single catch-all struct per interface selection carries the shared
+  fields and absorbs any `__typename` the server returns that wasn't
+  explicitly fragment-conditioned. This dramatically reduces generated
+  code size for interfaces with many implementations (e.g. Relay-style
+  `Node`) and gracefully decodes unknown concrete types instead of
+  returning an error. See [#416](https://github.com/Khan/genqlient/issues/416).
 
 ### Bug fixes:
 

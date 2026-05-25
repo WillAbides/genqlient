@@ -104,20 +104,26 @@ use_struct_references: boolean
 # Defaults to false.
 use_extensions: boolean
 
-# If set, when a query uses fragments on an interface or union type,
-# genqlient will only generate full Go struct types for the concrete
-# types explicitly referenced in those fragments.  All other possible
-# implementation types are collapsed into a single catch-all "Other"
-# struct that contains only the shared fields.  Unknown __typename
-# values are unmarshaled into this Other type instead of returning an
-# error.
+# If set, genqlient will skip generating per-type structs for interface
+# and union implementations that aren't referenced via an inline fragment
+# or named fragment spread in the selection set. Instead, a single
+# catch-all struct is generated per interface selection point, carrying
+# only the interface's shared fields (including __typename). At runtime,
+# any __typename returned by the server that doesn't match one of the
+# explicitly-referenced types is decoded into the catch-all -- preserving
+# the graceful fallback behavior that existed before this option was
+# added, while dramatically reducing the size of generated code for
+# interfaces with many implementations (e.g. Relay-style Node).
 #
-# When false (the default), genqlient generates a separate Go struct
-# for every possible implementation type, and returns an error if the
-# server sends an unrecognized __typename.
+# Type conditions that name an interface or union (rather than a concrete
+# Object type) are NOT treated as referencing any concrete implementation:
+# the optimization is only defeated by inline fragments or named fragments
+# whose type condition is itself an Object type. This means a fragment on
+# Node spread at a Node-typed field still collapses to the catch-all
+# unless one of its (possibly nested) fragments targets a concrete type.
 #
 # Defaults to false.
-omit_unreferenced_implementations: false
+omit_unreferenced_implementations: boolean
 
 # Customize how models are generated for optional fields. This can currently
 # be set to one of the following values:

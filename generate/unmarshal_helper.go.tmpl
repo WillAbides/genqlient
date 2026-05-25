@@ -31,6 +31,9 @@ func __unmarshal{{.GoName}}(b []byte, v *{{.GoName}}) error {
             "response was missing {{.GraphQLName}}.__typename")
     default:
         {{if .OtherImplementation -}}
+        {{/* Unknown __typename: fall back to the catch-all struct so the
+             caller still gets the interface's shared fields (and the raw
+             concrete type-name via __typename). */ -}}
         *v = new({{.OtherImplementation.GoName}})
         return {{ref "encoding/json.Unmarshal"}}(b, *v)
         {{else -}}
