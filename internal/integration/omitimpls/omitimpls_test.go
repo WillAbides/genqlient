@@ -58,8 +58,8 @@ func TestCatchAllForUnreferencedImplementation(t *testing.T) {
 	assert.Equal(t, "3", resp.Being.GetId())
 	assert.Equal(t, "Fido", resp.Being.GetName())
 
-	other, ok := resp.Being.(*queryOmitImplsBeingOther)
-	require.Truef(t, ok, "got %T, expected catch-all queryOmitImplsBeingOther", resp.Being)
+	other, ok := resp.Being.(*queryOmitImplsBeingGenqlientOther)
+	require.Truef(t, ok, "got %T, expected catch-all queryOmitImplsBeingGenqlientOther", resp.Being)
 	assert.Equal(t, "Animal", other.Typename)
 	assert.Equal(t, "3", other.Id)
 	assert.Equal(t, "Fido", other.Name)

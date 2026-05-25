@@ -32,7 +32,7 @@ func (v *OmitImplsAllImplsReferencedRandomLeafArticle) GetText() string { return
 // OmitImplsAllImplsReferencedRandomLeafLeafContent is implemented by the following types:
 // OmitImplsAllImplsReferencedRandomLeafArticle
 // OmitImplsAllImplsReferencedRandomLeafVideo
-// OmitImplsAllImplsReferencedRandomLeafLeafContentOther
+// OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // LeafContent represents content items that can't have child-nodes.
@@ -46,7 +46,7 @@ func (v *OmitImplsAllImplsReferencedRandomLeafArticle) implementsGraphQLInterfac
 }
 func (v *OmitImplsAllImplsReferencedRandomLeafVideo) implementsGraphQLInterfaceOmitImplsAllImplsReferencedRandomLeafLeafContent() {
 }
-func (v *OmitImplsAllImplsReferencedRandomLeafLeafContentOther) implementsGraphQLInterfaceOmitImplsAllImplsReferencedRandomLeafLeafContent() {
+func (v *OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther) implementsGraphQLInterfaceOmitImplsAllImplsReferencedRandomLeafLeafContent() {
 }
 
 func __unmarshalOmitImplsAllImplsReferencedRandomLeafLeafContent(b []byte, v *OmitImplsAllImplsReferencedRandomLeafLeafContent) error {
@@ -73,7 +73,7 @@ func __unmarshalOmitImplsAllImplsReferencedRandomLeafLeafContent(b []byte, v *Om
 		return fmt.Errorf(
 			"response was missing LeafContent.__typename")
 	default:
-		*v = new(OmitImplsAllImplsReferencedRandomLeafLeafContentOther)
+		*v = new(OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -98,7 +98,7 @@ func __marshalOmitImplsAllImplsReferencedRandomLeafLeafContent(v *OmitImplsAllIm
 			*OmitImplsAllImplsReferencedRandomLeafVideo
 		}{typename, v}
 		return json.Marshal(result)
-	case *OmitImplsAllImplsReferencedRandomLeafLeafContentOther:
+	case *OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -108,13 +108,13 @@ func __marshalOmitImplsAllImplsReferencedRandomLeafLeafContent(v *OmitImplsAllIm
 	}
 }
 
-// OmitImplsAllImplsReferencedRandomLeafLeafContentOther is the catch-all for OmitImplsAllImplsReferencedRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type OmitImplsAllImplsReferencedRandomLeafLeafContentOther struct {
+// OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther is the catch-all for OmitImplsAllImplsReferencedRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 }
 
-// GetTypename returns OmitImplsAllImplsReferencedRandomLeafLeafContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *OmitImplsAllImplsReferencedRandomLeafLeafContentOther) GetTypename() string {
+// GetTypename returns OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *OmitImplsAllImplsReferencedRandomLeafLeafContentGenqlientOther) GetTypename() string {
 	return v.Typename
 }
 

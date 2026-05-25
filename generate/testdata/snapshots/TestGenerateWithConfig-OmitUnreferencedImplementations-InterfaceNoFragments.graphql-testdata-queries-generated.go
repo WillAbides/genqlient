@@ -13,7 +13,7 @@ import (
 // InterfaceNoFragmentsQueryRandomItemContent includes the requested fields of the GraphQL interface Content.
 //
 // InterfaceNoFragmentsQueryRandomItemContent is implemented by the following types:
-// InterfaceNoFragmentsQueryRandomItemContentOther
+// InterfaceNoFragmentsQueryRandomItemContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -30,7 +30,7 @@ type InterfaceNoFragmentsQueryRandomItemContent interface {
 	GetName() string
 }
 
-func (v *InterfaceNoFragmentsQueryRandomItemContentOther) implementsGraphQLInterfaceInterfaceNoFragmentsQueryRandomItemContent() {
+func (v *InterfaceNoFragmentsQueryRandomItemContentGenqlientOther) implementsGraphQLInterfaceInterfaceNoFragmentsQueryRandomItemContent() {
 }
 
 func __unmarshalInterfaceNoFragmentsQueryRandomItemContent(b []byte, v *InterfaceNoFragmentsQueryRandomItemContent) error {
@@ -51,7 +51,7 @@ func __unmarshalInterfaceNoFragmentsQueryRandomItemContent(b []byte, v *Interfac
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(InterfaceNoFragmentsQueryRandomItemContentOther)
+		*v = new(InterfaceNoFragmentsQueryRandomItemContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -59,7 +59,7 @@ func __unmarshalInterfaceNoFragmentsQueryRandomItemContent(b []byte, v *Interfac
 func __marshalInterfaceNoFragmentsQueryRandomItemContent(v *InterfaceNoFragmentsQueryRandomItemContent) ([]byte, error) {
 
 	switch v := (*v).(type) {
-	case *InterfaceNoFragmentsQueryRandomItemContentOther:
+	case *InterfaceNoFragmentsQueryRandomItemContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -69,27 +69,29 @@ func __marshalInterfaceNoFragmentsQueryRandomItemContent(v *InterfaceNoFragments
 	}
 }
 
-// InterfaceNoFragmentsQueryRandomItemContentOther is the catch-all for InterfaceNoFragmentsQueryRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type InterfaceNoFragmentsQueryRandomItemContentOther struct {
+// InterfaceNoFragmentsQueryRandomItemContentGenqlientOther is the catch-all for InterfaceNoFragmentsQueryRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type InterfaceNoFragmentsQueryRandomItemContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// GetTypename returns InterfaceNoFragmentsQueryRandomItemContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryRandomItemContentOther) GetTypename() string { return v.Typename }
+// GetTypename returns InterfaceNoFragmentsQueryRandomItemContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryRandomItemContentGenqlientOther) GetTypename() string {
+	return v.Typename
+}
 
-// GetId returns InterfaceNoFragmentsQueryRandomItemContentOther.Id, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryRandomItemContentOther) GetId() string { return v.Id }
+// GetId returns InterfaceNoFragmentsQueryRandomItemContentGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryRandomItemContentGenqlientOther) GetId() string { return v.Id }
 
-// GetName returns InterfaceNoFragmentsQueryRandomItemContentOther.Name, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryRandomItemContentOther) GetName() string { return v.Name }
+// GetName returns InterfaceNoFragmentsQueryRandomItemContentGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryRandomItemContentGenqlientOther) GetName() string { return v.Name }
 
 // InterfaceNoFragmentsQueryRandomItemWithTypeNameContent includes the requested fields of the GraphQL interface Content.
 //
 // InterfaceNoFragmentsQueryRandomItemWithTypeNameContent is implemented by the following types:
-// InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther
+// InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -106,7 +108,7 @@ type InterfaceNoFragmentsQueryRandomItemWithTypeNameContent interface {
 	GetName() string
 }
 
-func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther) implementsGraphQLInterfaceInterfaceNoFragmentsQueryRandomItemWithTypeNameContent() {
+func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther) implementsGraphQLInterfaceInterfaceNoFragmentsQueryRandomItemWithTypeNameContent() {
 }
 
 func __unmarshalInterfaceNoFragmentsQueryRandomItemWithTypeNameContent(b []byte, v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContent) error {
@@ -127,7 +129,7 @@ func __unmarshalInterfaceNoFragmentsQueryRandomItemWithTypeNameContent(b []byte,
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther)
+		*v = new(InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -135,7 +137,7 @@ func __unmarshalInterfaceNoFragmentsQueryRandomItemWithTypeNameContent(b []byte,
 func __marshalInterfaceNoFragmentsQueryRandomItemWithTypeNameContent(v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContent) ([]byte, error) {
 
 	switch v := (*v).(type) {
-	case *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther:
+	case *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -145,24 +147,28 @@ func __marshalInterfaceNoFragmentsQueryRandomItemWithTypeNameContent(v *Interfac
 	}
 }
 
-// InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther is the catch-all for InterfaceNoFragmentsQueryRandomItemWithTypeNameContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther struct {
+// InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther is the catch-all for InterfaceNoFragmentsQueryRandomItemWithTypeNameContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// GetTypename returns InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther) GetTypename() string {
+// GetTypename returns InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther) GetTypename() string {
 	return v.Typename
 }
 
-// GetId returns InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther.Id, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther) GetId() string { return v.Id }
+// GetId returns InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther) GetId() string {
+	return v.Id
+}
 
-// GetName returns InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther.Name, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther) GetName() string { return v.Name }
+// GetName returns InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryRandomItemWithTypeNameContentGenqlientOther) GetName() string {
+	return v.Name
+}
 
 // InterfaceNoFragmentsQueryResponse is returned by InterfaceNoFragmentsQuery on success.
 type InterfaceNoFragmentsQueryResponse struct {
@@ -333,7 +339,7 @@ func (v *InterfaceNoFragmentsQueryRootTopic) GetName() string { return v.Name }
 // InterfaceNoFragmentsQueryWithPointerContent includes the requested fields of the GraphQL interface Content.
 //
 // InterfaceNoFragmentsQueryWithPointerContent is implemented by the following types:
-// InterfaceNoFragmentsQueryWithPointerContentOther
+// InterfaceNoFragmentsQueryWithPointerContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -350,7 +356,7 @@ type InterfaceNoFragmentsQueryWithPointerContent interface {
 	GetName() *string
 }
 
-func (v *InterfaceNoFragmentsQueryWithPointerContentOther) implementsGraphQLInterfaceInterfaceNoFragmentsQueryWithPointerContent() {
+func (v *InterfaceNoFragmentsQueryWithPointerContentGenqlientOther) implementsGraphQLInterfaceInterfaceNoFragmentsQueryWithPointerContent() {
 }
 
 func __unmarshalInterfaceNoFragmentsQueryWithPointerContent(b []byte, v *InterfaceNoFragmentsQueryWithPointerContent) error {
@@ -371,7 +377,7 @@ func __unmarshalInterfaceNoFragmentsQueryWithPointerContent(b []byte, v *Interfa
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(InterfaceNoFragmentsQueryWithPointerContentOther)
+		*v = new(InterfaceNoFragmentsQueryWithPointerContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -379,7 +385,7 @@ func __unmarshalInterfaceNoFragmentsQueryWithPointerContent(b []byte, v *Interfa
 func __marshalInterfaceNoFragmentsQueryWithPointerContent(v *InterfaceNoFragmentsQueryWithPointerContent) ([]byte, error) {
 
 	switch v := (*v).(type) {
-	case *InterfaceNoFragmentsQueryWithPointerContentOther:
+	case *InterfaceNoFragmentsQueryWithPointerContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -389,22 +395,24 @@ func __marshalInterfaceNoFragmentsQueryWithPointerContent(v *InterfaceNoFragment
 	}
 }
 
-// InterfaceNoFragmentsQueryWithPointerContentOther is the catch-all for InterfaceNoFragmentsQueryWithPointerContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type InterfaceNoFragmentsQueryWithPointerContentOther struct {
+// InterfaceNoFragmentsQueryWithPointerContentGenqlientOther is the catch-all for InterfaceNoFragmentsQueryWithPointerContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type InterfaceNoFragmentsQueryWithPointerContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id   *string `json:"id"`
 	Name *string `json:"name"`
 }
 
-// GetTypename returns InterfaceNoFragmentsQueryWithPointerContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryWithPointerContentOther) GetTypename() string { return v.Typename }
+// GetTypename returns InterfaceNoFragmentsQueryWithPointerContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryWithPointerContentGenqlientOther) GetTypename() string {
+	return v.Typename
+}
 
-// GetId returns InterfaceNoFragmentsQueryWithPointerContentOther.Id, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryWithPointerContentOther) GetId() *string { return v.Id }
+// GetId returns InterfaceNoFragmentsQueryWithPointerContentGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryWithPointerContentGenqlientOther) GetId() *string { return v.Id }
 
-// GetName returns InterfaceNoFragmentsQueryWithPointerContentOther.Name, and is useful for accessing the field via an interface.
-func (v *InterfaceNoFragmentsQueryWithPointerContentOther) GetName() *string { return v.Name }
+// GetName returns InterfaceNoFragmentsQueryWithPointerContentGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *InterfaceNoFragmentsQueryWithPointerContentGenqlientOther) GetName() *string { return v.Name }
 
 // The query executed by InterfaceNoFragmentsQuery.
 const InterfaceNoFragmentsQuery_Operation = `

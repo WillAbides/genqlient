@@ -16,7 +16,7 @@ import (
 // Content is implemented by various types like Article, Video, and Topic.
 //
 // ContentBasics is implemented by the following types:
-// ContentBasicsOther
+// ContentBasicsGenqlientOther
 type ContentBasics interface {
 	implementsGraphQLInterfaceContentBasics()
 	// GetId returns the interface-field "id" from its implementation.
@@ -28,7 +28,7 @@ type ContentBasics interface {
 	GetName() string
 }
 
-func (v *ContentBasicsOther) implementsGraphQLInterfaceContentBasics() {}
+func (v *ContentBasicsGenqlientOther) implementsGraphQLInterfaceContentBasics() {}
 
 func __unmarshalContentBasics(b []byte, v *ContentBasics) error {
 	if string(b) == "null" {
@@ -48,7 +48,7 @@ func __unmarshalContentBasics(b []byte, v *ContentBasics) error {
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(ContentBasicsOther)
+		*v = new(ContentBasicsGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -56,7 +56,7 @@ func __unmarshalContentBasics(b []byte, v *ContentBasics) error {
 func __marshalContentBasics(v *ContentBasics) ([]byte, error) {
 
 	switch v := (*v).(type) {
-	case *ContentBasicsOther:
+	case *ContentBasicsGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -66,26 +66,26 @@ func __marshalContentBasics(v *ContentBasics) ([]byte, error) {
 	}
 }
 
-// ContentBasicsOther is the catch-all for ContentBasics implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type ContentBasicsOther struct {
+// ContentBasicsGenqlientOther is the catch-all for ContentBasics implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type ContentBasicsGenqlientOther struct {
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// GetId returns ContentBasicsOther.Id, and is useful for accessing the field via an interface.
-func (v *ContentBasicsOther) GetId() string { return v.Id }
+// GetId returns ContentBasicsGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *ContentBasicsGenqlientOther) GetId() string { return v.Id }
 
-// GetName returns ContentBasicsOther.Name, and is useful for accessing the field via an interface.
-func (v *ContentBasicsOther) GetName() string { return v.Name }
+// GetName returns ContentBasicsGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *ContentBasicsGenqlientOther) GetName() string { return v.Name }
 
 // OmitImplsAbstractFragmentInConcreteRandomItemArticle includes the requested fields of the GraphQL type Article.
 type OmitImplsAbstractFragmentInConcreteRandomItemArticle struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
-	Id                 string `json:"id"`
-	Text               string `json:"text"`
-	ContentBasicsOther `json:"-"`
+	Id                          string `json:"id"`
+	Text                        string `json:"text"`
+	ContentBasicsGenqlientOther `json:"-"`
 }
 
 // GetTypename returns OmitImplsAbstractFragmentInConcreteRandomItemArticle.Typename, and is useful for accessing the field via an interface.
@@ -101,7 +101,7 @@ func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) GetText() string 
 
 // GetName returns OmitImplsAbstractFragmentInConcreteRandomItemArticle.Name, and is useful for accessing the field via an interface.
 func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) GetName() string {
-	return v.ContentBasicsOther.Name
+	return v.ContentBasicsGenqlientOther.Name
 }
 
 func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) UnmarshalJSON(b []byte) error {
@@ -122,7 +122,7 @@ func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) UnmarshalJSON(b [
 	}
 
 	err = json.Unmarshal(
-		b, &v.ContentBasicsOther)
+		b, &v.ContentBasicsGenqlientOther)
 	if err != nil {
 		return err
 	}
@@ -153,7 +153,7 @@ func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) __premarshalJSON(
 	retval.Typename = v.Typename
 	retval.Id = v.Id
 	retval.Text = v.Text
-	retval.Name = v.ContentBasicsOther.Name
+	retval.Name = v.ContentBasicsGenqlientOther.Name
 	return &retval, nil
 }
 
@@ -161,7 +161,7 @@ func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) __premarshalJSON(
 //
 // OmitImplsAbstractFragmentInConcreteRandomItemContent is implemented by the following types:
 // OmitImplsAbstractFragmentInConcreteRandomItemArticle
-// OmitImplsAbstractFragmentInConcreteRandomItemContentOther
+// OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -178,7 +178,7 @@ type OmitImplsAbstractFragmentInConcreteRandomItemContent interface {
 
 func (v *OmitImplsAbstractFragmentInConcreteRandomItemArticle) implementsGraphQLInterfaceOmitImplsAbstractFragmentInConcreteRandomItemContent() {
 }
-func (v *OmitImplsAbstractFragmentInConcreteRandomItemContentOther) implementsGraphQLInterfaceOmitImplsAbstractFragmentInConcreteRandomItemContent() {
+func (v *OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther) implementsGraphQLInterfaceOmitImplsAbstractFragmentInConcreteRandomItemContent() {
 }
 
 func __unmarshalOmitImplsAbstractFragmentInConcreteRandomItemContent(b []byte, v *OmitImplsAbstractFragmentInConcreteRandomItemContent) error {
@@ -202,7 +202,7 @@ func __unmarshalOmitImplsAbstractFragmentInConcreteRandomItemContent(b []byte, v
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(OmitImplsAbstractFragmentInConcreteRandomItemContentOther)
+		*v = new(OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -223,7 +223,7 @@ func __marshalOmitImplsAbstractFragmentInConcreteRandomItemContent(v *OmitImplsA
 			*__premarshalOmitImplsAbstractFragmentInConcreteRandomItemArticle
 		}{typename, premarshaled}
 		return json.Marshal(result)
-	case *OmitImplsAbstractFragmentInConcreteRandomItemContentOther:
+	case *OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -233,20 +233,22 @@ func __marshalOmitImplsAbstractFragmentInConcreteRandomItemContent(v *OmitImplsA
 	}
 }
 
-// OmitImplsAbstractFragmentInConcreteRandomItemContentOther is the catch-all for OmitImplsAbstractFragmentInConcreteRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type OmitImplsAbstractFragmentInConcreteRandomItemContentOther struct {
+// OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther is the catch-all for OmitImplsAbstractFragmentInConcreteRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id string `json:"id"`
 }
 
-// GetTypename returns OmitImplsAbstractFragmentInConcreteRandomItemContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *OmitImplsAbstractFragmentInConcreteRandomItemContentOther) GetTypename() string {
+// GetTypename returns OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther) GetTypename() string {
 	return v.Typename
 }
 
-// GetId returns OmitImplsAbstractFragmentInConcreteRandomItemContentOther.Id, and is useful for accessing the field via an interface.
-func (v *OmitImplsAbstractFragmentInConcreteRandomItemContentOther) GetId() string { return v.Id }
+// GetId returns OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *OmitImplsAbstractFragmentInConcreteRandomItemContentGenqlientOther) GetId() string {
+	return v.Id
+}
 
 // OmitImplsAbstractFragmentInConcreteResponse is returned by OmitImplsAbstractFragmentInConcrete on success.
 type OmitImplsAbstractFragmentInConcreteResponse struct {

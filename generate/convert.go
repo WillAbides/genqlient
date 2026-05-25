@@ -806,7 +806,7 @@ func (g *generator) makeCatchAllStruct(
 		catchAllFields = append(catchAllFields, f)
 	}
 
-	catchAllName := pickCatchAllName(g.typeMap, interfaceGoName)
+	catchAllName := interfaceGoName + "GenqlientOther"
 	catchAll := &goStructType{
 		GoName:    catchAllName,
 		Fields:    catchAllFields,
@@ -831,26 +831,6 @@ func (g *generator) makeCatchAllStruct(
 			interfaceGoName, registered)
 	}
 	return catchAllTyp, nil
-}
-
-// pickCatchAllName returns a Go name for the catch-all that does not collide
-// with anything already in typeMap. Tries "<…>Other" first, then
-// "<…>OtherCatchAll", then numeric suffixes.
-func pickCatchAllName(typeMap map[string]goType, interfaceGoName string) string {
-	primary := interfaceGoName + "Other"
-	if _, taken := typeMap[primary]; !taken {
-		return primary
-	}
-	fallback := interfaceGoName + "OtherCatchAll"
-	if _, taken := typeMap[fallback]; !taken {
-		return fallback
-	}
-	for i := 2; ; i++ {
-		candidate := fmt.Sprintf("%s%d", fallback, i)
-		if _, taken := typeMap[candidate]; !taken {
-			return candidate
-		}
-	}
 }
 
 // fragmentMatches returns true if the given fragment is "active" when applied

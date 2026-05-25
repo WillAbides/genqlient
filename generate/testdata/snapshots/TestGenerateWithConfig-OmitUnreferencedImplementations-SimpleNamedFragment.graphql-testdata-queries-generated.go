@@ -14,7 +14,7 @@ import (
 //
 // SimpleNamedFragmentRandomItemContent is implemented by the following types:
 // SimpleNamedFragmentRandomItemVideo
-// SimpleNamedFragmentRandomItemContentOther
+// SimpleNamedFragmentRandomItemContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -33,7 +33,7 @@ type SimpleNamedFragmentRandomItemContent interface {
 
 func (v *SimpleNamedFragmentRandomItemVideo) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
 }
-func (v *SimpleNamedFragmentRandomItemContentOther) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
+func (v *SimpleNamedFragmentRandomItemContentGenqlientOther) implementsGraphQLInterfaceSimpleNamedFragmentRandomItemContent() {
 }
 
 func __unmarshalSimpleNamedFragmentRandomItemContent(b []byte, v *SimpleNamedFragmentRandomItemContent) error {
@@ -57,7 +57,7 @@ func __unmarshalSimpleNamedFragmentRandomItemContent(b []byte, v *SimpleNamedFra
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(SimpleNamedFragmentRandomItemContentOther)
+		*v = new(SimpleNamedFragmentRandomItemContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -78,7 +78,7 @@ func __marshalSimpleNamedFragmentRandomItemContent(v *SimpleNamedFragmentRandomI
 			*__premarshalSimpleNamedFragmentRandomItemVideo
 		}{typename, premarshaled}
 		return json.Marshal(result)
-	case *SimpleNamedFragmentRandomItemContentOther:
+	case *SimpleNamedFragmentRandomItemContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -88,22 +88,22 @@ func __marshalSimpleNamedFragmentRandomItemContent(v *SimpleNamedFragmentRandomI
 	}
 }
 
-// SimpleNamedFragmentRandomItemContentOther is the catch-all for SimpleNamedFragmentRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type SimpleNamedFragmentRandomItemContentOther struct {
+// SimpleNamedFragmentRandomItemContentGenqlientOther is the catch-all for SimpleNamedFragmentRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type SimpleNamedFragmentRandomItemContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// GetTypename returns SimpleNamedFragmentRandomItemContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemContentOther) GetTypename() string { return v.Typename }
+// GetTypename returns SimpleNamedFragmentRandomItemContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomItemContentGenqlientOther) GetTypename() string { return v.Typename }
 
-// GetId returns SimpleNamedFragmentRandomItemContentOther.Id, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemContentOther) GetId() string { return v.Id }
+// GetId returns SimpleNamedFragmentRandomItemContentGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomItemContentGenqlientOther) GetId() string { return v.Id }
 
-// GetName returns SimpleNamedFragmentRandomItemContentOther.Name, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomItemContentOther) GetName() string { return v.Name }
+// GetName returns SimpleNamedFragmentRandomItemContentGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomItemContentGenqlientOther) GetName() string { return v.Name }
 
 // SimpleNamedFragmentRandomItemVideo includes the requested fields of the GraphQL type Video.
 type SimpleNamedFragmentRandomItemVideo struct {
@@ -197,7 +197,7 @@ func (v *SimpleNamedFragmentRandomItemVideo) __premarshalJSON() (*__premarshalSi
 //
 // SimpleNamedFragmentRandomLeafLeafContent is implemented by the following types:
 // SimpleNamedFragmentRandomLeafVideo
-// SimpleNamedFragmentRandomLeafLeafContentOther
+// SimpleNamedFragmentRandomLeafLeafContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // LeafContent represents content items that can't have child-nodes.
@@ -209,7 +209,7 @@ type SimpleNamedFragmentRandomLeafLeafContent interface {
 
 func (v *SimpleNamedFragmentRandomLeafVideo) implementsGraphQLInterfaceSimpleNamedFragmentRandomLeafLeafContent() {
 }
-func (v *SimpleNamedFragmentRandomLeafLeafContentOther) implementsGraphQLInterfaceSimpleNamedFragmentRandomLeafLeafContent() {
+func (v *SimpleNamedFragmentRandomLeafLeafContentGenqlientOther) implementsGraphQLInterfaceSimpleNamedFragmentRandomLeafLeafContent() {
 }
 
 func __unmarshalSimpleNamedFragmentRandomLeafLeafContent(b []byte, v *SimpleNamedFragmentRandomLeafLeafContent) error {
@@ -233,7 +233,7 @@ func __unmarshalSimpleNamedFragmentRandomLeafLeafContent(b []byte, v *SimpleName
 		return fmt.Errorf(
 			"response was missing LeafContent.__typename")
 	default:
-		*v = new(SimpleNamedFragmentRandomLeafLeafContentOther)
+		*v = new(SimpleNamedFragmentRandomLeafLeafContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -254,7 +254,7 @@ func __marshalSimpleNamedFragmentRandomLeafLeafContent(v *SimpleNamedFragmentRan
 			*__premarshalSimpleNamedFragmentRandomLeafVideo
 		}{typename, premarshaled}
 		return json.Marshal(result)
-	case *SimpleNamedFragmentRandomLeafLeafContentOther:
+	case *SimpleNamedFragmentRandomLeafLeafContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -264,13 +264,15 @@ func __marshalSimpleNamedFragmentRandomLeafLeafContent(v *SimpleNamedFragmentRan
 	}
 }
 
-// SimpleNamedFragmentRandomLeafLeafContentOther is the catch-all for SimpleNamedFragmentRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type SimpleNamedFragmentRandomLeafLeafContentOther struct {
+// SimpleNamedFragmentRandomLeafLeafContentGenqlientOther is the catch-all for SimpleNamedFragmentRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type SimpleNamedFragmentRandomLeafLeafContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 }
 
-// GetTypename returns SimpleNamedFragmentRandomLeafLeafContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *SimpleNamedFragmentRandomLeafLeafContentOther) GetTypename() string { return v.Typename }
+// GetTypename returns SimpleNamedFragmentRandomLeafLeafContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *SimpleNamedFragmentRandomLeafLeafContentGenqlientOther) GetTypename() string {
+	return v.Typename
+}
 
 // SimpleNamedFragmentRandomLeafVideo includes the requested fields of the GraphQL type Video.
 type SimpleNamedFragmentRandomLeafVideo struct {

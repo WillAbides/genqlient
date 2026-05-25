@@ -17,7 +17,7 @@ import (
 //
 // NamedContentFields is implemented by the following types:
 // NamedContentFieldsArticle
-// NamedContentFieldsOther
+// NamedContentFieldsGenqlientOther
 type NamedContentFields interface {
 	implementsGraphQLInterfaceNamedContentFields()
 	// GetId returns the interface-field "id" from its implementation.
@@ -29,8 +29,8 @@ type NamedContentFields interface {
 	GetName() string
 }
 
-func (v *NamedContentFieldsArticle) implementsGraphQLInterfaceNamedContentFields() {}
-func (v *NamedContentFieldsOther) implementsGraphQLInterfaceNamedContentFields()   {}
+func (v *NamedContentFieldsArticle) implementsGraphQLInterfaceNamedContentFields()        {}
+func (v *NamedContentFieldsGenqlientOther) implementsGraphQLInterfaceNamedContentFields() {}
 
 func __unmarshalNamedContentFields(b []byte, v *NamedContentFields) error {
 	if string(b) == "null" {
@@ -53,7 +53,7 @@ func __unmarshalNamedContentFields(b []byte, v *NamedContentFields) error {
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(NamedContentFieldsOther)
+		*v = new(NamedContentFieldsGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -70,7 +70,7 @@ func __marshalNamedContentFields(v *NamedContentFields) ([]byte, error) {
 			*NamedContentFieldsArticle
 		}{typename, v}
 		return json.Marshal(result)
-	case *NamedContentFieldsOther:
+	case *NamedContentFieldsGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -100,18 +100,18 @@ func (v *NamedContentFieldsArticle) GetName() string { return v.Name }
 // GetText returns NamedContentFieldsArticle.Text, and is useful for accessing the field via an interface.
 func (v *NamedContentFieldsArticle) GetText() string { return v.Text }
 
-// NamedContentFieldsOther is the catch-all for NamedContentFields implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type NamedContentFieldsOther struct {
+// NamedContentFieldsGenqlientOther is the catch-all for NamedContentFields implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type NamedContentFieldsGenqlientOther struct {
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// GetId returns NamedContentFieldsOther.Id, and is useful for accessing the field via an interface.
-func (v *NamedContentFieldsOther) GetId() string { return v.Id }
+// GetId returns NamedContentFieldsGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *NamedContentFieldsGenqlientOther) GetId() string { return v.Id }
 
-// GetName returns NamedContentFieldsOther.Name, and is useful for accessing the field via an interface.
-func (v *NamedContentFieldsOther) GetName() string { return v.Name }
+// GetName returns NamedContentFieldsGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *NamedContentFieldsGenqlientOther) GetName() string { return v.Name }
 
 // OmitImplsNamedFragmentOnInterfaceRandomItemArticle includes the requested fields of the GraphQL type Article.
 type OmitImplsNamedFragmentOnInterfaceRandomItemArticle struct {
@@ -194,7 +194,7 @@ func (v *OmitImplsNamedFragmentOnInterfaceRandomItemArticle) __premarshalJSON() 
 //
 // OmitImplsNamedFragmentOnInterfaceRandomItemContent is implemented by the following types:
 // OmitImplsNamedFragmentOnInterfaceRandomItemArticle
-// OmitImplsNamedFragmentOnInterfaceRandomItemContentOther
+// OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // Content is implemented by various types like Article, Video, and Topic.
@@ -207,7 +207,7 @@ type OmitImplsNamedFragmentOnInterfaceRandomItemContent interface {
 
 func (v *OmitImplsNamedFragmentOnInterfaceRandomItemArticle) implementsGraphQLInterfaceOmitImplsNamedFragmentOnInterfaceRandomItemContent() {
 }
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) implementsGraphQLInterfaceOmitImplsNamedFragmentOnInterfaceRandomItemContent() {
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) implementsGraphQLInterfaceOmitImplsNamedFragmentOnInterfaceRandomItemContent() {
 }
 
 func __unmarshalOmitImplsNamedFragmentOnInterfaceRandomItemContent(b []byte, v *OmitImplsNamedFragmentOnInterfaceRandomItemContent) error {
@@ -231,7 +231,7 @@ func __unmarshalOmitImplsNamedFragmentOnInterfaceRandomItemContent(b []byte, v *
 		return fmt.Errorf(
 			"response was missing Content.__typename")
 	default:
-		*v = new(OmitImplsNamedFragmentOnInterfaceRandomItemContentOther)
+		*v = new(OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -252,7 +252,7 @@ func __marshalOmitImplsNamedFragmentOnInterfaceRandomItemContent(v *OmitImplsNam
 			*__premarshalOmitImplsNamedFragmentOnInterfaceRandomItemArticle
 		}{typename, premarshaled}
 		return json.Marshal(result)
-	case *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther:
+	case *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther:
 		premarshaled, err := v.__premarshalJSON()
 		if err != nil {
 			return nil, err
@@ -266,38 +266,38 @@ func __marshalOmitImplsNamedFragmentOnInterfaceRandomItemContent(v *OmitImplsNam
 	}
 }
 
-// OmitImplsNamedFragmentOnInterfaceRandomItemContentOther is the catch-all for OmitImplsNamedFragmentOnInterfaceRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type OmitImplsNamedFragmentOnInterfaceRandomItemContentOther struct {
-	Typename                string `json:"__typename"`
-	NamedContentFieldsOther `json:"-"`
+// OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther is the catch-all for OmitImplsNamedFragmentOnInterfaceRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther struct {
+	Typename                         string `json:"__typename"`
+	NamedContentFieldsGenqlientOther `json:"-"`
 }
 
-// GetTypename returns OmitImplsNamedFragmentOnInterfaceRandomItemContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) GetTypename() string {
+// GetTypename returns OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) GetTypename() string {
 	return v.Typename
 }
 
-// GetId returns OmitImplsNamedFragmentOnInterfaceRandomItemContentOther.Id, and is useful for accessing the field via an interface.
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) GetId() string {
-	return v.NamedContentFieldsOther.Id
+// GetId returns OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) GetId() string {
+	return v.NamedContentFieldsGenqlientOther.Id
 }
 
-// GetName returns OmitImplsNamedFragmentOnInterfaceRandomItemContentOther.Name, and is useful for accessing the field via an interface.
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) GetName() string {
-	return v.NamedContentFieldsOther.Name
+// GetName returns OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) GetName() string {
+	return v.NamedContentFieldsGenqlientOther.Name
 }
 
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) UnmarshalJSON(b []byte) error {
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) UnmarshalJSON(b []byte) error {
 
 	if string(b) == "null" {
 		return nil
 	}
 
 	var firstPass struct {
-		*OmitImplsNamedFragmentOnInterfaceRandomItemContentOther
+		*OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther
 		graphql.NoUnmarshalJSON
 	}
-	firstPass.OmitImplsNamedFragmentOnInterfaceRandomItemContentOther = v
+	firstPass.OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther = v
 
 	err := json.Unmarshal(b, &firstPass)
 	if err != nil {
@@ -305,14 +305,14 @@ func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) UnmarshalJSON(
 	}
 
 	err = json.Unmarshal(
-		b, &v.NamedContentFieldsOther)
+		b, &v.NamedContentFieldsGenqlientOther)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-type __premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentOther struct {
+type __premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 
 	Id string `json:"id"`
@@ -320,7 +320,7 @@ type __premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentOther struct 
 	Name string `json:"name"`
 }
 
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) MarshalJSON() ([]byte, error) {
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) MarshalJSON() ([]byte, error) {
 	premarshaled, err := v.__premarshalJSON()
 	if err != nil {
 		return nil, err
@@ -328,12 +328,12 @@ func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) MarshalJSON() 
 	return json.Marshal(premarshaled)
 }
 
-func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentOther) __premarshalJSON() (*__premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentOther, error) {
-	var retval __premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentOther
+func (v *OmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther) __premarshalJSON() (*__premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther, error) {
+	var retval __premarshalOmitImplsNamedFragmentOnInterfaceRandomItemContentGenqlientOther
 
 	retval.Typename = v.Typename
-	retval.Id = v.NamedContentFieldsOther.Id
-	retval.Name = v.NamedContentFieldsOther.Name
+	retval.Id = v.NamedContentFieldsGenqlientOther.Id
+	retval.Name = v.NamedContentFieldsGenqlientOther.Name
 	return &retval, nil
 }
 

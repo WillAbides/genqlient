@@ -22,7 +22,7 @@ func (v *__queryOmitImplsInput) GetId() string { return v.Id }
 //
 // queryOmitImplsBeing is implemented by the following types:
 // queryOmitImplsBeingUser
-// queryOmitImplsBeingOther
+// queryOmitImplsBeingGenqlientOther
 type queryOmitImplsBeing interface {
 	implementsGraphQLInterfacequeryOmitImplsBeing()
 	// GetTypename returns the receiver's concrete GraphQL type-name (see interface doc for possible values).
@@ -33,8 +33,8 @@ type queryOmitImplsBeing interface {
 	GetName() string
 }
 
-func (v *queryOmitImplsBeingUser) implementsGraphQLInterfacequeryOmitImplsBeing()  {}
-func (v *queryOmitImplsBeingOther) implementsGraphQLInterfacequeryOmitImplsBeing() {}
+func (v *queryOmitImplsBeingUser) implementsGraphQLInterfacequeryOmitImplsBeing()           {}
+func (v *queryOmitImplsBeingGenqlientOther) implementsGraphQLInterfacequeryOmitImplsBeing() {}
 
 func __unmarshalqueryOmitImplsBeing(b []byte, v *queryOmitImplsBeing) error {
 	if string(b) == "null" {
@@ -57,7 +57,7 @@ func __unmarshalqueryOmitImplsBeing(b []byte, v *queryOmitImplsBeing) error {
 		return fmt.Errorf(
 			"response was missing Being.__typename")
 	default:
-		*v = new(queryOmitImplsBeingOther)
+		*v = new(queryOmitImplsBeingGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -74,7 +74,7 @@ func __marshalqueryOmitImplsBeing(v *queryOmitImplsBeing) ([]byte, error) {
 			*queryOmitImplsBeingUser
 		}{typename, v}
 		return json.Marshal(result)
-	case *queryOmitImplsBeingOther:
+	case *queryOmitImplsBeingGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -84,21 +84,21 @@ func __marshalqueryOmitImplsBeing(v *queryOmitImplsBeing) ([]byte, error) {
 	}
 }
 
-// queryOmitImplsBeingOther is the catch-all for queryOmitImplsBeing implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type queryOmitImplsBeingOther struct {
+// queryOmitImplsBeingGenqlientOther is the catch-all for queryOmitImplsBeing implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type queryOmitImplsBeingGenqlientOther struct {
 	Typename string `json:"__typename"`
 	Id       string `json:"id"`
 	Name     string `json:"name"`
 }
 
-// GetTypename returns queryOmitImplsBeingOther.Typename, and is useful for accessing the field via an interface.
-func (v *queryOmitImplsBeingOther) GetTypename() string { return v.Typename }
+// GetTypename returns queryOmitImplsBeingGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *queryOmitImplsBeingGenqlientOther) GetTypename() string { return v.Typename }
 
-// GetId returns queryOmitImplsBeingOther.Id, and is useful for accessing the field via an interface.
-func (v *queryOmitImplsBeingOther) GetId() string { return v.Id }
+// GetId returns queryOmitImplsBeingGenqlientOther.Id, and is useful for accessing the field via an interface.
+func (v *queryOmitImplsBeingGenqlientOther) GetId() string { return v.Id }
 
-// GetName returns queryOmitImplsBeingOther.Name, and is useful for accessing the field via an interface.
-func (v *queryOmitImplsBeingOther) GetName() string { return v.Name }
+// GetName returns queryOmitImplsBeingGenqlientOther.Name, and is useful for accessing the field via an interface.
+func (v *queryOmitImplsBeingGenqlientOther) GetName() string { return v.Name }
 
 // queryOmitImplsBeingUser includes the requested fields of the GraphQL type User.
 type queryOmitImplsBeingUser struct {

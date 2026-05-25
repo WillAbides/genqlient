@@ -31,7 +31,7 @@ func (v *OmitImplsUnionRandomLeafArticle) GetText() string { return v.Text }
 //
 // OmitImplsUnionRandomLeafLeafContent is implemented by the following types:
 // OmitImplsUnionRandomLeafArticle
-// OmitImplsUnionRandomLeafLeafContentOther
+// OmitImplsUnionRandomLeafLeafContentGenqlientOther
 // The GraphQL type's documentation follows.
 //
 // LeafContent represents content items that can't have child-nodes.
@@ -43,7 +43,7 @@ type OmitImplsUnionRandomLeafLeafContent interface {
 
 func (v *OmitImplsUnionRandomLeafArticle) implementsGraphQLInterfaceOmitImplsUnionRandomLeafLeafContent() {
 }
-func (v *OmitImplsUnionRandomLeafLeafContentOther) implementsGraphQLInterfaceOmitImplsUnionRandomLeafLeafContent() {
+func (v *OmitImplsUnionRandomLeafLeafContentGenqlientOther) implementsGraphQLInterfaceOmitImplsUnionRandomLeafLeafContent() {
 }
 
 func __unmarshalOmitImplsUnionRandomLeafLeafContent(b []byte, v *OmitImplsUnionRandomLeafLeafContent) error {
@@ -67,7 +67,7 @@ func __unmarshalOmitImplsUnionRandomLeafLeafContent(b []byte, v *OmitImplsUnionR
 		return fmt.Errorf(
 			"response was missing LeafContent.__typename")
 	default:
-		*v = new(OmitImplsUnionRandomLeafLeafContentOther)
+		*v = new(OmitImplsUnionRandomLeafLeafContentGenqlientOther)
 		return json.Unmarshal(b, *v)
 	}
 }
@@ -84,7 +84,7 @@ func __marshalOmitImplsUnionRandomLeafLeafContent(v *OmitImplsUnionRandomLeafLea
 			*OmitImplsUnionRandomLeafArticle
 		}{typename, v}
 		return json.Marshal(result)
-	case *OmitImplsUnionRandomLeafLeafContentOther:
+	case *OmitImplsUnionRandomLeafLeafContentGenqlientOther:
 		return json.Marshal(v)
 	case nil:
 		return []byte("null"), nil
@@ -94,13 +94,13 @@ func __marshalOmitImplsUnionRandomLeafLeafContent(v *OmitImplsUnionRandomLeafLea
 	}
 }
 
-// OmitImplsUnionRandomLeafLeafContentOther is the catch-all for OmitImplsUnionRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
-type OmitImplsUnionRandomLeafLeafContentOther struct {
+// OmitImplsUnionRandomLeafLeafContentGenqlientOther is the catch-all for OmitImplsUnionRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
+type OmitImplsUnionRandomLeafLeafContentGenqlientOther struct {
 	Typename string `json:"__typename"`
 }
 
-// GetTypename returns OmitImplsUnionRandomLeafLeafContentOther.Typename, and is useful for accessing the field via an interface.
-func (v *OmitImplsUnionRandomLeafLeafContentOther) GetTypename() string { return v.Typename }
+// GetTypename returns OmitImplsUnionRandomLeafLeafContentGenqlientOther.Typename, and is useful for accessing the field via an interface.
+func (v *OmitImplsUnionRandomLeafLeafContentGenqlientOther) GetTypename() string { return v.Typename }
 
 // OmitImplsUnionResponse is returned by OmitImplsUnion on success.
 type OmitImplsUnionResponse struct {
