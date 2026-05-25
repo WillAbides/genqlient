@@ -823,7 +823,7 @@ func (g *generator) makeCatchAllStruct(
 		catchAllFields = append(catchAllFields, f)
 	}
 
-	catchAllName := interfaceGoName + "Other"
+	catchAllName := pickCatchAllName(g.typeMap, interfaceGoName)
 	catchAll := &goStructType{
 		GoName:    catchAllName,
 		Fields:    catchAllFields,
@@ -851,6 +851,32 @@ func (g *generator) makeCatchAllStruct(
 			interfaceGoName, registered)
 	}
 	return catchAllTyp, nil
+}
+
+// pickCatchAllName returns a Go type name for a catch-all struct that does
+// not collide with any name already in typeMap. The first choice is
+// "<interfaceGoName>Other", matching the user-visible naming convention. If
+// the schema contains a concrete implementation whose generated Go name is
+// already that string (for example, an implementation literally named "Other"
+// under a named fragment, or one named "<InterfaceName>Other" under an
+// interface field selection), we fall back to a disambiguated form rather
+// than letting addType surface a misleading "conflicting definition / genqlient
+// internal error" diagnostic to the user.
+func pickCatchAllName(typeMap map[string]goType, interfaceGoName string) string {
+	primary := interfaceGoName + "Other"
+	if _, taken := typeMap[primary]; !taken {
+		return primary
+	}
+	fallback := interfaceGoName + "OtherCatchAll"
+	if _, taken := typeMap[fallback]; !taken {
+		return fallback
+	}
+	for i := 2; ; i++ {
+		candidate := fmt.Sprintf("%s%d", fallback, i)
+		if _, taken := typeMap[candidate]; !taken {
+			return candidate
+		}
+	}
 }
 
 // fragmentMatches returns true if the given fragment is "active" when applied
