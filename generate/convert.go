@@ -964,10 +964,25 @@ func (g *generator) convertFragmentSpread(
 		//  type FA struct { ... }
 		//  // (other implementations)
 		// when you spread F into a context of type A, we embed FA, not F.
+		matched := false
 		for _, impl := range iface.Implementations {
 			if impl.GraphQLName == containingTypedef.Name {
 				typ = impl
+				matched = true
+				break
 			}
+		}
+		if !matched && iface.OtherImplementation != nil {
+			// With OmitUnreferencedImplementations enabled, the fragment's
+			// per-implementation struct for this concrete type may have been
+			// omitted (e.g. a fragment on an interface that has no concrete
+			// type conditions of its own). Fall back to the fragment's
+			// catch-all struct: it carries the same shared fields and is a
+			// valid Go struct, so embedding it inside the concrete-type
+			// struct generates correct code rather than failing later in
+			// FlattenedFields with an "embedded field was not a struct"
+			// error.
+			typ = iface.OtherImplementation
 		}
 	}
 

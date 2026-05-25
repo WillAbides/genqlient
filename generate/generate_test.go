@@ -281,6 +281,7 @@ func TestGenerateWithConfig(t *testing.T) {
 				"InterfaceNoFragments.graphql",
 				"OmitImplsNamedFragmentOnInterface.graphql",
 				"OmitImplsUnion.graphql",
+				"OmitImplsAbstractFragmentInConcrete.graphql",
 			}, &Config{
 				OmitUnreferencedImplementations: true,
 			},
