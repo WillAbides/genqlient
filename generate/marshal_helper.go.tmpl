@@ -40,12 +40,8 @@ func __marshal{{.GoName}}(v *{{.GoName}}) ([]byte, error) {
     {{if .OtherImplementation -}}
     case *{{.OtherImplementation.GoName}}:
         {{/* Catch-all from OmitUnreferencedImplementations.  Its own
-             __typename field carries the concrete GraphQL type-name, so we
-             don't need to splice it in with a wrapper struct like we do for
-             the typed implementations above.  This assumes the caller
-             populated __typename (which is always true for values produced
-             by our unmarshal-helper; callers constructing a value
-             programmatically should set it themselves). */ -}}
+             __typename field carries the GraphQL type-name, so no
+             wrapper struct is needed. */ -}}
         {{if .OtherImplementation.NeedsMarshaling -}}
         premarshaled, err := v.__premarshalJSON()
         if err != nil {

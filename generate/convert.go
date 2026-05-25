@@ -523,12 +523,9 @@ func (g *generator) convertDefinition(
 		// Make sure we generate stable output by sorting the types by name when we get them
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
 
-		// When omit_unreferenced_implementations is enabled, determine which
-		// concrete types are explicitly referenced by fragments in the
-		// selection set, and skip generating per-type structs for the rest.
-		// Anything we skip — plus any future server-side implementation
-		// added after generation — is handled at runtime by a single
-		// catch-all struct carrying only the interface's shared fields.
+		// If omit_unreferenced_implementations is enabled, only generate
+		// per-type structs for implementations a fragment actually
+		// references; the rest are absorbed by the catch-all below.
 		filteredImpls := implementationTypes
 		if g.Config.OmitUnreferencedImplementations {
 			referenced := collectReferencedConcreteTypes(selectionSet, g.schema)
@@ -570,13 +567,8 @@ func (g *generator) convertDefinition(
 		}
 
 		if g.Config.OmitUnreferencedImplementations {
-			// Always generate the catch-all when the option is enabled, even
-			// if every currently-known implementation is explicitly
-			// referenced. This is the contract documented in
-			// docs/genqlient.yaml: "any __typename returned by the server
-			// that doesn't match one of the explicitly-referenced types is
-			// decoded into the catch-all" — including __typenames for
-			// implementations added to the server after generation.
+			// Always emit the catch-all so unknown __typenames (e.g. from
+			// server-side schema additions) decode gracefully.
 			otherType, err := g.makeCatchAllStruct(name, def.Name, sharedFields, selectionSet, pos)
 			if err != nil {
 				return nil, err
@@ -747,13 +739,10 @@ func (g *generator) convertSelectionSet(
 	return uniqFields, nil
 }
 
-// collectReferencedConcreteTypes walks an interface/union selection set and
-// returns the set of concrete (Object) type names referenced via inline or
-// named fragments, including transitively through nested fragments. Type
-// conditions that name an interface or union are NOT expanded to all their
-// possible concrete types — we only recurse into the fragment body. This
-// makes OmitUnreferencedImplementations meaningful when fragments are spread
-// on abstract types (e.g. a fragment on Node spread at a Node-typed field).
+// collectReferencedConcreteTypes returns the set of concrete (Object) type
+// names reachable via inline or named fragments in sel, recursing through
+// nested fragments. Type conditions naming an interface or union do NOT
+// expand to their possible concrete types; the catch-all handles those.
 func collectReferencedConcreteTypes(sel ast.SelectionSet, schema *ast.Schema) map[string]bool {
 	referenced := map[string]bool{}
 	addCondition := func(condName string) {
@@ -777,29 +766,21 @@ func collectReferencedConcreteTypes(sel ast.SelectionSet, schema *ast.Schema) ma
 					walk(s.Definition.SelectionSet)
 				}
 			}
-			// Plain field selections don't introduce new type conditions
-			// at this level; nested type conditions are processed when we
-			// convert those fields' own selection sets.
 		}
 	}
 	walk(sel)
 	return referenced
 }
 
-// makeCatchAllStruct builds the catch-all goStructType used by
-// OmitUnreferencedImplementations and registers it via g.addType. The
-// catch-all carries only the interface's SharedFields (which always include
-// __typename, injected by preprocessQueryDocument). At runtime the
-// unmarshal-helper instantiates this struct whenever the server returns a
-// __typename that doesn't match an explicitly-referenced implementation.
+// makeCatchAllStruct builds and registers the catch-all goStructType used
+// by OmitUnreferencedImplementations. The struct carries the interface's
+// shared fields (always including __typename); the unmarshal-helper
+// instantiates it whenever the server returns a __typename without an
+// explicitly-referenced implementation.
 //
-// When SharedFields contains an embedded fragment-spread whose GoType is
-// itself a *goInterfaceType (a fragment on an abstract type), we substitute
-// the fragment-interface's own catch-all so the resulting Go type is a
-// valid struct embedding only other structs. This requires the
-// option-aware path to have produced a catch-all for that fragment; in
-// practice that's always true when this code runs, because the same
-// OmitUnreferencedImplementations option drove its construction.
+// Embedded fragment-spreads whose GoType is itself a *goInterfaceType are
+// swapped for that fragment's catch-all, so the result is a valid Go
+// struct embedding only structs.
 func (g *generator) makeCatchAllStruct(
 	interfaceGoName, graphQLName string,
 	sharedFields []*goStructField,
@@ -813,11 +794,8 @@ func (g *generator) makeCatchAllStruct(
 			if ok {
 				if iface.OtherImplementation == nil {
 					return nil, errorf(pos,
-						"genqlient internal error: cannot build catch-all for %s: "+
-							"embedded fragment %s has no catch-all of its own "+
-							"(this is expected to be impossible when "+
-							"omit_unreferenced_implementations is enabled)",
-						interfaceGoName, iface.GoName)
+						"genqlient internal error: embedded fragment %s has no catch-all",
+						iface.GoName)
 				}
 				swapped := *f
 				swapped.GoType = iface.OtherImplementation
@@ -836,11 +814,8 @@ func (g *generator) makeCatchAllStruct(
 		descriptionInfo: descriptionInfo{
 			GraphQLName: graphQLName,
 			CommentOverride: fmt.Sprintf(
-				"%s is the catch-all type used by %s for any concrete\n"+
-					"GraphQL type returned by the server that doesn't have its own\n"+
-					"generated struct (because no fragment selected it). It carries\n"+
-					"only the interface's shared fields; the concrete GraphQL type\n"+
-					"name is available via the __typename field.",
+				"%s is the catch-all for %s implementations that aren't "+
+					"explicitly fragmented; the concrete type-name is in __typename.",
 				catchAllName, interfaceGoName),
 		},
 		Generator: g,
@@ -852,21 +827,15 @@ func (g *generator) makeCatchAllStruct(
 	catchAllTyp, ok := registered.(*goStructType)
 	if !ok {
 		return nil, errorf(pos,
-			"genqlient internal error: catch-all for %s registered as %T, not *goStructType",
+			"genqlient internal error: catch-all for %s registered as %T",
 			interfaceGoName, registered)
 	}
 	return catchAllTyp, nil
 }
 
-// pickCatchAllName returns a Go type name for a catch-all struct that does
-// not collide with any name already in typeMap. The first choice is
-// "<interfaceGoName>Other", matching the user-visible naming convention. If
-// the schema contains a concrete implementation whose generated Go name is
-// already that string (for example, an implementation literally named "Other"
-// under a named fragment, or one named "<InterfaceName>Other" under an
-// interface field selection), we fall back to a disambiguated form rather
-// than letting addType surface a misleading "conflicting definition / genqlient
-// internal error" diagnostic to the user.
+// pickCatchAllName returns a Go name for the catch-all that does not collide
+// with anything already in typeMap. Tries "<…>Other" first, then
+// "<…>OtherCatchAll", then numeric suffixes.
 func pickCatchAllName(typeMap map[string]goType, interfaceGoName string) string {
 	primary := interfaceGoName + "Other"
 	if _, taken := typeMap[primary]; !taken {
@@ -1004,15 +973,9 @@ func (g *generator) convertFragmentSpread(
 			}
 		}
 		if !matched && iface.OtherImplementation != nil {
-			// With OmitUnreferencedImplementations enabled, the fragment's
-			// per-implementation struct for this concrete type may have been
-			// omitted (e.g. a fragment on an interface that has no concrete
-			// type conditions of its own). Fall back to the fragment's
-			// catch-all struct: it carries the same shared fields and is a
-			// valid Go struct, so embedding it inside the concrete-type
-			// struct generates correct code rather than failing later in
-			// FlattenedFields with an "embedded field was not a struct"
-			// error.
+			// The per-implementation struct may have been omitted by
+			// OmitUnreferencedImplementations; fall back to the catch-all,
+			// which is a real struct with the same shared fields.
 			typ = iface.OtherImplementation
 		}
 	}
@@ -1115,10 +1078,6 @@ func (g *generator) convertNamedFragment(fragment *ast.FragmentDefinition) (goTy
 		}
 
 		if g.Config.OmitUnreferencedImplementations {
-			// Always generate the catch-all when the option is enabled, so
-			// __typenames for implementations added to the server after
-			// generation still decode gracefully (matching the contract in
-			// docs/genqlient.yaml).
 			otherType, err := g.makeCatchAllStruct(fragment.Name, typ.Name, fields, fragment.SelectionSet, fragment.Position)
 			if err != nil {
 				return nil, err

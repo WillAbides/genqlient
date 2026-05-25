@@ -66,11 +66,7 @@ func __marshalContentBasics(v *ContentBasics) ([]byte, error) {
 	}
 }
 
-// ContentBasicsOther is the catch-all type used by ContentBasics for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// ContentBasicsOther is the catch-all for ContentBasics implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type ContentBasicsOther struct {
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
@@ -237,11 +233,7 @@ func __marshalOmitImplsAbstractFragmentInConcreteRandomItemContent(v *OmitImplsA
 	}
 }
 
-// OmitImplsAbstractFragmentInConcreteRandomItemContentOther is the catch-all type used by OmitImplsAbstractFragmentInConcreteRandomItemContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// OmitImplsAbstractFragmentInConcreteRandomItemContentOther is the catch-all for OmitImplsAbstractFragmentInConcreteRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type OmitImplsAbstractFragmentInConcreteRandomItemContentOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.

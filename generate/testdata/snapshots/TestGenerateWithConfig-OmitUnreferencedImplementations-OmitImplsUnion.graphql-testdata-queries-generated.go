@@ -94,11 +94,7 @@ func __marshalOmitImplsUnionRandomLeafLeafContent(v *OmitImplsUnionRandomLeafLea
 	}
 }
 
-// OmitImplsUnionRandomLeafLeafContentOther is the catch-all type used by OmitImplsUnionRandomLeafLeafContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// OmitImplsUnionRandomLeafLeafContentOther is the catch-all for OmitImplsUnionRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type OmitImplsUnionRandomLeafLeafContentOther struct {
 	Typename string `json:"__typename"`
 }

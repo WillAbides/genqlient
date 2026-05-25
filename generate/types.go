@@ -486,10 +486,8 @@ type goInterfaceType struct {
 	// we'll generate getter methods for each.
 	SharedFields    []*goStructField
 	Implementations []*goStructType
-	// OtherImplementation is a catch-all struct for concrete types not
-	// explicitly referenced by any fragment in the query.  It contains
-	// only the shared fields.  If nil, all implementations are explicitly
-	// listed in Implementations.
+	// OtherImplementation, if non-nil, is a catch-all struct used at
+	// runtime for any concrete type not present in Implementations.
 	OtherImplementation *goStructType
 	Selection           ast.SelectionSet
 	descriptionInfo

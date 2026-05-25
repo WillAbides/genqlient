@@ -84,11 +84,7 @@ func __marshalqueryOmitImplsBeing(v *queryOmitImplsBeing) ([]byte, error) {
 	}
 }
 
-// queryOmitImplsBeingOther is the catch-all type used by queryOmitImplsBeing for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// queryOmitImplsBeingOther is the catch-all for queryOmitImplsBeing implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type queryOmitImplsBeingOther struct {
 	Typename string `json:"__typename"`
 	Id       string `json:"id"`

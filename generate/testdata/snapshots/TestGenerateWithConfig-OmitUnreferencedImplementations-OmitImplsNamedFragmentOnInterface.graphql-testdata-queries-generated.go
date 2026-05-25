@@ -100,11 +100,7 @@ func (v *NamedContentFieldsArticle) GetName() string { return v.Name }
 // GetText returns NamedContentFieldsArticle.Text, and is useful for accessing the field via an interface.
 func (v *NamedContentFieldsArticle) GetText() string { return v.Text }
 
-// NamedContentFieldsOther is the catch-all type used by NamedContentFields for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// NamedContentFieldsOther is the catch-all for NamedContentFields implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type NamedContentFieldsOther struct {
 	// ID is the identifier of the content.
 	Id   string `json:"id"`
@@ -270,11 +266,7 @@ func __marshalOmitImplsNamedFragmentOnInterfaceRandomItemContent(v *OmitImplsNam
 	}
 }
 
-// OmitImplsNamedFragmentOnInterfaceRandomItemContentOther is the catch-all type used by OmitImplsNamedFragmentOnInterfaceRandomItemContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// OmitImplsNamedFragmentOnInterfaceRandomItemContentOther is the catch-all for OmitImplsNamedFragmentOnInterfaceRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type OmitImplsNamedFragmentOnInterfaceRandomItemContentOther struct {
 	Typename                string `json:"__typename"`
 	NamedContentFieldsOther `json:"-"`

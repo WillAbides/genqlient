@@ -88,11 +88,7 @@ func __marshalSimpleNamedFragmentRandomItemContent(v *SimpleNamedFragmentRandomI
 	}
 }
 
-// SimpleNamedFragmentRandomItemContentOther is the catch-all type used by SimpleNamedFragmentRandomItemContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// SimpleNamedFragmentRandomItemContentOther is the catch-all for SimpleNamedFragmentRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type SimpleNamedFragmentRandomItemContentOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
@@ -268,11 +264,7 @@ func __marshalSimpleNamedFragmentRandomLeafLeafContent(v *SimpleNamedFragmentRan
 	}
 }
 
-// SimpleNamedFragmentRandomLeafLeafContentOther is the catch-all type used by SimpleNamedFragmentRandomLeafLeafContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// SimpleNamedFragmentRandomLeafLeafContentOther is the catch-all for SimpleNamedFragmentRandomLeafLeafContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type SimpleNamedFragmentRandomLeafLeafContentOther struct {
 	Typename string `json:"__typename"`
 }

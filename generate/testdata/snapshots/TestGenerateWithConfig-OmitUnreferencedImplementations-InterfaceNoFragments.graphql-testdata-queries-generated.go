@@ -69,11 +69,7 @@ func __marshalInterfaceNoFragmentsQueryRandomItemContent(v *InterfaceNoFragments
 	}
 }
 
-// InterfaceNoFragmentsQueryRandomItemContentOther is the catch-all type used by InterfaceNoFragmentsQueryRandomItemContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// InterfaceNoFragmentsQueryRandomItemContentOther is the catch-all for InterfaceNoFragmentsQueryRandomItemContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type InterfaceNoFragmentsQueryRandomItemContentOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
@@ -149,11 +145,7 @@ func __marshalInterfaceNoFragmentsQueryRandomItemWithTypeNameContent(v *Interfac
 	}
 }
 
-// InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther is the catch-all type used by InterfaceNoFragmentsQueryRandomItemWithTypeNameContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther is the catch-all for InterfaceNoFragmentsQueryRandomItemWithTypeNameContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type InterfaceNoFragmentsQueryRandomItemWithTypeNameContentOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
@@ -397,11 +389,7 @@ func __marshalInterfaceNoFragmentsQueryWithPointerContent(v *InterfaceNoFragment
 	}
 }
 
-// InterfaceNoFragmentsQueryWithPointerContentOther is the catch-all type used by InterfaceNoFragmentsQueryWithPointerContent for any concrete
-// GraphQL type returned by the server that doesn't have its own
-// generated struct (because no fragment selected it). It carries
-// only the interface's shared fields; the concrete GraphQL type
-// name is available via the __typename field.
+// InterfaceNoFragmentsQueryWithPointerContentOther is the catch-all for InterfaceNoFragmentsQueryWithPointerContent implementations that aren't explicitly fragmented; the concrete type-name is in __typename.
 type InterfaceNoFragmentsQueryWithPointerContentOther struct {
 	Typename string `json:"__typename"`
 	// ID is the identifier of the content.
