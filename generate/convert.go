@@ -522,15 +522,40 @@ func (g *generator) convertDefinition(
 		implementationTypes := g.schema.GetPossibleTypes(def)
 		// Make sure we generate stable output by sorting the types by name when we get them
 		sort.Slice(implementationTypes, func(i, j int) bool { return implementationTypes[i].Name < implementationTypes[j].Name })
+
+		// If the OmitUnreferencedImplementations config option is enabled,
+		// only generate per-type structs for implementations that are
+		// actually referenced via inline or named fragments in this
+		// selection set. Any other concrete type returned by the server at
+		// runtime will be unmarshaled into a single catch-all struct that
+		// carries only the shared fields. This dramatically reduces
+		// generated code size for interfaces with many implementations
+		// (e.g. Relay-style Node) while preserving graceful handling of
+		// unknown __typename values.
+		filteredImpls := implementationTypes
+		var omittedAny bool
+		if g.Config.OmitUnreferencedImplementations {
+			referenced := collectReferencedConcreteTypes(selectionSet, g.schema)
+			kept := make([]*ast.Definition, 0, len(implementationTypes))
+			for _, implDef := range implementationTypes {
+				if referenced[implDef.Name] {
+					kept = append(kept, implDef)
+				} else {
+					omittedAny = true
+				}
+			}
+			filteredImpls = kept
+		}
+
 		goType := &goInterfaceType{
 			GoName:          name,
 			SharedFields:    sharedFields,
-			Implementations: make([]*goStructType, len(implementationTypes)),
+			Implementations: make([]*goStructType, len(filteredImpls)),
 			Selection:       selectionSet,
 			descriptionInfo: desc,
 		}
 
-		for i, implDef := range implementationTypes {
+		for i, implDef := range filteredImpls {
 			// TODO(benkraft): In principle we should skip generating a Go
 			// field for __typename each of these impl-defs if you didn't
 			// request it (and it was automatically added by
@@ -550,6 +575,38 @@ func (g *generator) convertDefinition(
 			}
 			goType.Implementations[i] = implStructTyp
 		}
+
+		if omittedAny {
+			// Build a catch-all struct that carries only the shared fields
+			// (which always include __typename, injected by
+			// preprocessQueryDocument). The struct is also registered in
+			// g.typeMap so its definition (and getter methods) gets
+			// written. The interface's WriteDefinition emits the marker
+			// method that makes it satisfy the Go interface.
+			catchAllName := name + "Other"
+			catchAllFields := make([]*goStructField, len(sharedFields))
+			copy(catchAllFields, sharedFields)
+			catchAll := &goStructType{
+				GoName:    catchAllName,
+				Fields:    catchAllFields,
+				Selection: selectionSet,
+				descriptionInfo: descriptionInfo{
+					CommentOverride: fmt.Sprintf(
+						"%s is the catch-all type used by %s for any concrete\n"+
+							"GraphQL type returned by the server that doesn't have its own\n"+
+							"generated struct (because no fragment selected it). It carries\n"+
+							"only the interface's shared fields; the concrete GraphQL type\n"+
+							"name is available via the __typename field.",
+						catchAllName, name),
+				},
+				Generator: g,
+			}
+			if _, err := g.addType(catchAll, catchAll.GoName, pos); err != nil {
+				return nil, err
+			}
+			goType.CatchAll = catchAll
+		}
+
 		return g.addType(goType, goType.GoName, pos)
 
 	case ast.Enum:
@@ -964,4 +1021,51 @@ func (g *generator) convertField(
 		GraphQLName: field.Name,
 		Description: field.Definition.Description,
 	}, nil
+}
+
+// collectReferencedConcreteTypes walks an interface/union selection set and
+// returns the set of concrete (object) type names referenced via inline or
+// named fragments, including transitively through nested fragments. Type
+// conditions that name an interface or union are expanded to all of their
+// possible concrete types. Used by the OmitUnreferencedImplementations
+// optimization.
+func collectReferencedConcreteTypes(sel ast.SelectionSet, schema *ast.Schema) map[string]bool {
+referenced := map[string]bool{}
+var walk func(sel ast.SelectionSet)
+addCondition := func(condName string) {
+if condName == "" {
+return
+}
+condDef := schema.Types[condName]
+if condDef == nil {
+return
+}
+switch condDef.Kind {
+case ast.Object:
+referenced[condName] = true
+case ast.Interface, ast.Union:
+for _, t := range schema.GetPossibleTypes(condDef) {
+referenced[t.Name] = true
+}
+}
+}
+walk = func(sel ast.SelectionSet) {
+for _, s := range sel {
+switch s := s.(type) {
+case *ast.InlineFragment:
+addCondition(s.TypeCondition)
+walk(s.SelectionSet)
+case *ast.FragmentSpread:
+if s.Definition != nil {
+addCondition(s.Definition.TypeCondition)
+walk(s.Definition.SelectionSet)
+}
+}
+// Plain field selections don't introduce new type conditions
+// at this level; nested type conditions are processed when we
+// convert those fields' own selection sets.
+}
+}
+walk(sel)
+return referenced
 }

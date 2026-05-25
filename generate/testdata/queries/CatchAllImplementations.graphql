@@ -1,0 +1,9 @@
+query CatchAllImplementations {
+  randomItem {
+    id
+    name
+    ... on Article {
+      text
+    }
+  }
+}

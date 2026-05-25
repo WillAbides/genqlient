@@ -1,0 +1,9 @@
+{
+  "operations": [
+    {
+      "operationName": "CatchAllImplementations",
+      "query": "\nquery CatchAllImplementations {\n\trandomItem {\n\t\t__typename\n\t\tid\n\t\tname\n\t\t... on Article {\n\t\t\ttext\n\t\t}\n\t}\n}\n",
+      "sourceLocation": "testdata/queries/CatchAllImplementations.graphql"
+    }
+  ]
+}

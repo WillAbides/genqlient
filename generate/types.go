@@ -486,7 +486,12 @@ type goInterfaceType struct {
 	// we'll generate getter methods for each.
 	SharedFields    []*goStructField
 	Implementations []*goStructType
-	Selection       ast.SelectionSet
+	// CatchAll, if non-nil, is a struct used by the unmarshaler whenever the
+	// server returns a __typename that doesn't match any of Implementations.
+	// It carries only the SharedFields. It is set when the
+	// OmitUnreferencedImplementations config option is enabled.
+	CatchAll  *goStructType
+	Selection ast.SelectionSet
 	descriptionInfo
 }
 
@@ -529,6 +534,10 @@ func (typ *goInterfaceType) WriteDefinition(w io.Writer, g *generator) error {
 	for _, impl := range typ.Implementations {
 		fmt.Fprintf(w, "func (v *%s) %s() {}\n",
 			impl.Reference(), implementsMethodName)
+	}
+	if typ.CatchAll != nil {
+		fmt.Fprintf(w, "func (v *%s) %s() {}\n",
+			typ.CatchAll.Reference(), implementsMethodName)
 	}
 
 	// Finally, write the marshal- and unmarshal-helpers, which

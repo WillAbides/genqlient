@@ -30,7 +30,14 @@ func __unmarshal{{.GoName}}(b []byte, v *{{.GoName}}) error {
         return {{ref "fmt.Errorf"}}(
             "response was missing {{.GraphQLName}}.__typename")
     default:
+        {{if .CatchAll -}}
+        {{/* Unknown __typename: fall back to the catch-all struct so the
+             caller still gets the interface's shared fields. */ -}}
+        *v = new({{.CatchAll.GoName}})
+        return {{ref "encoding/json.Unmarshal"}}(b, *v)
+        {{else -}}
         return {{ref "fmt.Errorf"}}(
             `unexpected concrete type for {{.GoName}}: "%v"`, tn.TypeName)
+        {{end -}}
     }
 }

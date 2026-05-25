@@ -104,6 +104,20 @@ use_struct_references: boolean
 # Defaults to false.
 use_extensions: boolean
 
+# If set, genqlient will skip generating per-type structs for interface and
+# union implementations that aren't referenced via an inline fragment or named
+# fragment spread in the selection set. Instead, a single catch-all struct is
+# generated per interface selection point, carrying the interface's shared
+# fields (including __typename). At runtime, any __typename returned by the
+# server that doesn't match one of the explicitly-referenced types is decoded
+# into the catch-all -- preserving the graceful fallback behavior that
+# existed before this option was added, while dramatically reducing the
+# size of generated code for interfaces with many implementations
+# (e.g. Relay-style Node).
+#
+# Defaults to false.
+omit_unreferenced_implementations: boolean
+
 # Customize how models are generated for optional fields. This can currently
 # be set to one of the following values:
 # - value (default): optional fields are generated as values, the same as

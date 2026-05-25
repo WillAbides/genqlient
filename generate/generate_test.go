@@ -215,6 +215,13 @@ func TestGenerateWithConfig(t *testing.T) {
 		{"Extensions", "", nil, &Config{
 			Extensions: true,
 		}},
+		{"OmitUnreferencedImplementations", "", []string{
+			"CatchAllImplementations.graphql",
+			"SimpleInlineFragment.graphql",
+			"InterfaceNoFragments.graphql",
+		}, &Config{
+			OmitUnreferencedImplementations: true,
+		}},
 		{"OptionalValue", "", []string{"ListInput.graphql", "QueryWithSlices.graphql"}, &Config{
 			Optional: "value",
 		}},
