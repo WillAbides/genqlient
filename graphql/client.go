@@ -310,12 +310,14 @@ func (c *client) MakeRequest(ctx context.Context, req *Request, resp *Response) 
 					Errors: gqlerror.List{&gqlerror.Error{Message: string(respBody)}},
 				},
 				StatusCode: httpResp.StatusCode,
+				Headers:    httpResp.Header.Clone(),
 			}
 		}
 
 		return &HTTPError{
 			Response:   gqlResp,
 			StatusCode: httpResp.StatusCode,
+			Headers:    httpResp.Header.Clone(),
 		}
 	}
 

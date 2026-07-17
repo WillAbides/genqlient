@@ -4,13 +4,24 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
+
+type staticDoer struct {
+	response *http.Response
+}
+
+func (d staticDoer) Do(*http.Request) (*http.Response, error) {
+	return d.response, nil
+}
 
 func makeServer(t *testing.T, responseCode int, responseBody any) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -93,7 +104,51 @@ func TestMakeRequestHTTPError(t *testing.T) {
 			assert.Error(t, err)
 			var httpErr *HTTPError
 			assert.True(t, errors.As(err, &httpErr), "Error should be of type *HTTPError")
-			assert.Equal(t, tc.expectedError, httpErr)
+			assert.Equal(t, tc.expectedError.Response, httpErr.Response)
+			assert.Equal(t, tc.expectedError.StatusCode, httpErr.StatusCode)
+		})
+	}
+}
+
+func TestMakeRequestHTTPErrorHeaders(t *testing.T) {
+	testCases := []struct {
+		name string
+		body string
+	}{
+		{
+			name: "GraphQL error response",
+			body: `{"errors":[{"message":"Rate limit exceeded"}]}`,
+		},
+		{
+			name: "invalid JSON response",
+			body: "Bad Gateway",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			responseHeaders := make(http.Header)
+			responseHeaders.Set("Retry-After", "60")
+			responseHeaders.Set("X-RateLimit-Reset", "1752793200")
+			responseHeaders.Set("X-RateLimit-Remaining", "0")
+			httpResponse := &http.Response{
+				StatusCode: http.StatusTooManyRequests,
+				Header:     responseHeaders,
+				Body:       io.NopCloser(strings.NewReader(tc.body)),
+			}
+			client := NewClient("https://example.com/graphql", staticDoer{response: httpResponse})
+
+			err := client.MakeRequest(context.Background(), &Request{}, &Response{})
+			require.Error(t, err)
+
+			var httpErr *HTTPError
+			require.ErrorAs(t, err, &httpErr)
+			assert.Equal(t, "60", httpErr.Headers.Get("Retry-After"))
+			assert.Equal(t, "1752793200", httpErr.Headers.Get("X-RateLimit-Reset"))
+			assert.Equal(t, "0", httpErr.Headers.Get("X-RateLimit-Remaining"))
+
+			responseHeaders.Set("Retry-After", "120")
+			assert.Equal(t, "60", httpErr.Headers.Get("Retry-After"))
 		})
 	}
 }

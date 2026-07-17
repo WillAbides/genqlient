@@ -3,10 +3,13 @@ package graphql
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 // HTTPError represents an HTTP error with status code and response body.
 type HTTPError struct {
+	// Headers contains a copy of the HTTP response headers.
+	Headers    http.Header `json:"-"`
 	Response   Response
 	StatusCode int
 }
