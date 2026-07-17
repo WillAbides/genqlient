@@ -56,11 +56,12 @@ func TestMakeRequestHTTPError(t *testing.T) {
 		{
 			name:               "JSONErrorWithExtensions",
 			serverResponseCode: http.StatusTooManyRequests,
-			serverResponseBody: Response{
-				Errors: gqlerror.List{
-					&gqlerror.Error{
-						Message: "Rate limit exceeded",
-						Extensions: map[string]interface{}{
+			serverResponseBody: map[string]any{
+				"errors": []map[string]any{
+					{
+						"message": "Rate limit exceeded",
+						"type":    "RATE_LIMITED",
+						"extensions": map[string]any{
 							"code": "RATE_LIMIT_EXCEEDED",
 						},
 					},
@@ -73,6 +74,7 @@ func TestMakeRequestHTTPError(t *testing.T) {
 							Message: "Rate limit exceeded",
 							Extensions: map[string]interface{}{
 								"code": "RATE_LIMIT_EXCEEDED",
+								"type": "RATE_LIMITED",
 							},
 						},
 					},
@@ -97,8 +99,30 @@ func TestMakeRequestHTTPError(t *testing.T) {
 }
 
 func TestMakeRequestHTTPErrors(t *testing.T) {
-	server := makeServer(t, http.StatusOK, Response{
-		Errors: gqlerror.List{&gqlerror.Error{Message: "Rate limit exceeded"}},
+	server := makeServer(t, http.StatusOK, map[string]any{
+		"errors": []map[string]any{
+			{
+				"message": "Rate limit exceeded",
+				"type":    "RATE_LIMITED",
+			},
+			{
+				"message": "Resource not accessible",
+				"type":    "FORBIDDEN",
+			},
+			{
+				"message": "Standard GraphQL error",
+				"extensions": map[string]any{
+					"code": "STANDARD_ERROR",
+				},
+			},
+			{
+				"message": "Top-level type takes precedence",
+				"type":    "RATE_LIMITED",
+				"extensions": map[string]any{
+					"type": "LEGACY_RATE_LIMIT",
+				},
+			},
+		},
 	})
 	defer server.Close()
 	_, err := makeRequest(server)
@@ -106,7 +130,32 @@ func TestMakeRequestHTTPErrors(t *testing.T) {
 	assert.Error(t, err)
 	var gqlErr gqlerror.List
 	assert.True(t, errors.As(err, &gqlErr), "Error should be of type *gqlerror.List")
-	assert.Equal(t, gqlerror.List{&gqlerror.Error{Message: "Rate limit exceeded"}}, gqlErr)
+	assert.Equal(t, gqlerror.List{
+		&gqlerror.Error{
+			Message: "Rate limit exceeded",
+			Extensions: map[string]interface{}{
+				"type": "RATE_LIMITED",
+			},
+		},
+		&gqlerror.Error{
+			Message: "Resource not accessible",
+			Extensions: map[string]interface{}{
+				"type": "FORBIDDEN",
+			},
+		},
+		&gqlerror.Error{
+			Message: "Standard GraphQL error",
+			Extensions: map[string]interface{}{
+				"code": "STANDARD_ERROR",
+			},
+		},
+		&gqlerror.Error{
+			Message: "Top-level type takes precedence",
+			Extensions: map[string]interface{}{
+				"type": "RATE_LIMITED",
+			},
+		},
+	}, gqlErr)
 }
 
 func TestMakeRequestSuccess(t *testing.T) {

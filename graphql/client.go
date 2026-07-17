@@ -235,6 +235,42 @@ type BaseResponse[T any] struct {
 // are optional, depending on the values returned by the server.
 type Response BaseResponse[any]
 
+func decodeResponse(body []byte, resp *Response) error {
+	err := json.Unmarshal(body, resp)
+	if err != nil {
+		return err
+	}
+
+	var rawResponse struct {
+		Errors []struct {
+			Type json.RawMessage `json:"type"`
+		} `json:"errors"`
+	}
+	err = json.Unmarshal(body, &rawResponse)
+	if err != nil {
+		return err
+	}
+
+	for i, rawError := range rawResponse.Errors {
+		if len(rawError.Type) == 0 || i >= len(resp.Errors) || resp.Errors[i] == nil {
+			continue
+		}
+
+		var errorType any
+		err = json.Unmarshal(rawError.Type, &errorType)
+		if err != nil {
+			return err
+		}
+
+		if resp.Errors[i].Extensions == nil {
+			resp.Errors[i].Extensions = make(map[string]any)
+		}
+		resp.Errors[i].Extensions["type"] = errorType
+	}
+
+	return nil
+}
+
 func (c *client) MakeRequest(ctx context.Context, req *Request, resp *Response) error {
 	var httpReq *http.Request
 	var err error
@@ -267,7 +303,8 @@ func (c *client) MakeRequest(ctx context.Context, req *Request, resp *Response) 
 		}
 
 		var gqlResp Response
-		if err = json.Unmarshal(respBody, &gqlResp); err != nil {
+		err = decodeResponse(respBody, &gqlResp)
+		if err != nil {
 			return &HTTPError{
 				Response: Response{
 					Errors: gqlerror.List{&gqlerror.Error{Message: string(respBody)}},
@@ -282,7 +319,12 @@ func (c *client) MakeRequest(ctx context.Context, req *Request, resp *Response) 
 		}
 	}
 
-	err = json.NewDecoder(httpResp.Body).Decode(resp)
+	var respBody []byte
+	respBody, err = io.ReadAll(httpResp.Body)
+	if err != nil {
+		return err
+	}
+	err = decodeResponse(respBody, resp)
 	if err != nil {
 		return err
 	}
